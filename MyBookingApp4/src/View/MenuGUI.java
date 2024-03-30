@@ -81,13 +81,13 @@ public class MenuGUI extends JFrame {
 		
 		JButton menu_product = new JButton("Ürün Yönetimi");
 		menu_product.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-					ProductManagementGUI prodManagementGUI = new ProductManagementGUI(manager);
-					prodManagementGUI.setVisible(true);
-					dispose();
-			}
+		    public void actionPerformed(ActionEvent e) {
+		        ProductManagementGUI prodManagementGUI = new ProductManagementGUI(manager);
+		        prodManagementGUI.setVisible(true);
+		        dispose();
+		    }
 		});
-		
+
 		menu_product.setHorizontalAlignment(SwingConstants.CENTER);
 		menu_product.setFont(new Font("Yu Gothic Medium", Font.BOLD, 25));
 		menu_product.setBackground(Color.WHITE);

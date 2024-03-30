@@ -136,9 +136,13 @@ public class AddProductDialogGUI extends JDialog {
 				getRootPane().setDefaultButton(saveButton);
 			}
 			{
-				JButton cancelButton = new JButton("İptal");
-				cancelButton.setActionCommand("Cancel");
-				buttonPane.add(cancelButton);
+			    JButton cancelButton = new JButton("İptal");
+			    cancelButton.addActionListener(new ActionListener() {
+			        public void actionPerformed(ActionEvent e) {
+			            setVisible(false);
+			        }	
+			    });
+			    buttonPane.add(cancelButton);
 			}
 		}
 	}
