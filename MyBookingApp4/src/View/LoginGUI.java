@@ -108,27 +108,7 @@ public class LoginGUI extends JFrame {
 					dispose();
 				}
 				
-//			} else {
-//				try {
-//					Connection con = conn.connDB();
-//					java.sql.Statement st = con.createStatement();
-//					ResultSet rs = st.executeQuery("SELECT * FROM user");
-//					while(rs.next()) {
-//						if (fld_doktorTc.getText().equals(rs.getString("tcno")) && fld_doktorPass.getText().equals(rs.getString("password"))) {
-//						 Bashekim bhBashekim = new Bashekim();
-//						 bhBashekim.setId(rs.getInt("id"));
-//						 bhBashekim.setPassword(rs.getString("password"));
-//						 bhBashekim.setTcno(rs.getString("tcno"));
-//						 bhBashekim.setName(rs.getString("name"));
-//						 bhBashekim.setType(rs.getString("type"));
-//						System.out.println(bhBashekim.getName());
-//						}
-//					}
-//				} catch (SQLException e1) {
-//					// TODO Auto-generated catch block
-//					e1.printStackTrace();
-//				}
-//			}	
+
 				
 			}
 		});
