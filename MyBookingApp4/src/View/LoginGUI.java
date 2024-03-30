@@ -115,7 +115,7 @@ public class LoginGUI extends JFrame {
 	                                menuGUI.setVisible(true);
 	                                dispose();
 	                        } else {
-	                            Helper.showMsg("invalid"); // Hatalı kullanıcı adı veya şifre
+	                            Helper.showMsg("invalid");
 	                        }
                         }
                     } catch (SQLException ex) {

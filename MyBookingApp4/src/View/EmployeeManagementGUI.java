@@ -118,7 +118,7 @@ public class EmployeeManagementGUI extends JFrame {
 		                    Helper.showMsg("success");
 		                    fld_employeeName.setText(null);
 		                    fld_EmployeeType.setText(null);
-		                    updateEmployeeModel(); // Tabloyu güncelle
+		                    updateEmployeeModel();
 		                }
 		            } catch (SQLException e1) {
 		                e1.printStackTrace();
@@ -205,7 +205,7 @@ public class EmployeeManagementGUI extends JFrame {
 			}
 		});
 		
-		JLabel lblNewLabel = new JLabel("Hosgeldiniz, Sayın <dynamic>");
+		JLabel lblNewLabel = new JLabel("Çalışan Yönetim Ekranı");
 		lblNewLabel.setFont(new Font("Yu Gothic UI Semibold", Font.PLAIN, 18));
 		lblNewLabel.setBounds(10, 10, 311, 25);
 		contentPane.add(lblNewLabel);
@@ -220,7 +220,7 @@ public class EmployeeManagementGUI extends JFrame {
 		});
 
 		btn_exit.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		btn_exit.setBounds(665, 21, 161, 27);
+		btn_exit.setBounds(645, 21, 181, 27);
 		contentPane.add(btn_exit);
 	}
 	
