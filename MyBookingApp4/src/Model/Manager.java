@@ -7,12 +7,11 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import Helper.DBConnection;
+
 public class Manager{
 	
-//	Connection con = conn.connDB();
-//	Statement st = null;
-//	ResultSet rs = null;
-//	PreparedStatement preparedStatement = null;
+	DBConnection conn = new DBConnection();
 	
 	int id;
 	String nickname, password;

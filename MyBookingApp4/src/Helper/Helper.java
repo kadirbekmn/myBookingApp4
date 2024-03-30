@@ -21,6 +21,9 @@ public class Helper {
 		case "fill":
 			msg = "Lütfen tüm alanları doldurunuz.";
 			break;
+		case "invalid":
+			msg = "Hatalı kullanıcı adı veya şifre !";
+			break;
 		case "success":
 			msg = "İşlem başarılı !";
 			break;
