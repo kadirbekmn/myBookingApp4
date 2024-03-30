@@ -34,7 +34,7 @@ public class MenuGUI extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					MenuGUI frame = new MenuGUI(manager);
+					MenuGUI frame = new MenuGUI();
 					  frame.pack();
 					  Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 					  int height = screenSize.height;
@@ -50,7 +50,7 @@ public class MenuGUI extends JFrame {
 		});
 	}
 
-	public MenuGUI(Manager manager) {
+	public MenuGUI() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 850, 700);
 		w_pane = new JPanel();

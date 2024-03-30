@@ -82,7 +82,7 @@ public class EmployeeManagementGUI extends JFrame {
 		
 		JPanel panel = new JPanel();
 		panel.setLayout(null);
-		w_tab.addTab("New tab", null, panel, null);
+		w_tab.addTab("Çalışan Yönetim Sekmesi", null, panel, null);
 		
 		JLabel lblalanAdSoyad = new JLabel("Çalışan Ad Soyad:");
 		lblalanAdSoyad.setFont(new Font("Yu Gothic Medium", Font.BOLD, 15));
@@ -213,9 +213,17 @@ public class EmployeeManagementGUI extends JFrame {
 		lblNewLabel.setBounds(10, 10, 311, 25);
 		contentPane.add(lblNewLabel);
 		
-		JButton btn_exit = new JButton("Çıkış Yap");
+		JButton btn_exit = new JButton("Menüye Geri Dön");
+		btn_exit.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		        MenuGUI menuGUI = new MenuGUI();
+		        menuGUI.setVisible(true);
+		        dispose();
+		    }
+		});
+
 		btn_exit.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		btn_exit.setBounds(716, 21, 110, 27);
+		btn_exit.setBounds(665, 21, 161, 27);
 		contentPane.add(btn_exit);
 	}
 	
