@@ -26,6 +26,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.EtchedBorder;
 
+import Helper.DBConnection;
 import Helper.Helper;
 import Model.Manager;
 import View.MenuGUI;
@@ -38,6 +39,7 @@ public class LoginGUI extends JFrame {
 	private JPanel w_pane;
 	private JTextField fld_userNickname;
 	private JTextField fld_userPassword;
+	private DBConnection conn = new DBConnection();
 	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -50,7 +52,7 @@ public class LoginGUI extends JFrame {
 					  int width = screenSize.width;
 					  frame.setSize(width, height);			  
 					  frame.setVisible(true);
-				      frame.setLocationRelativeTo(null); // this method display the JFrame to center position of a screen
+				      frame.setLocationRelativeTo(null);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -93,25 +95,35 @@ public class LoginGUI extends JFrame {
         btn_login.setFont(new Font("Yu Gothic Medium", Font.BOLD, 17));
         btn_login.setBounds(226, 131, 150, 58);
         panel.add(btn_login);
+        
         btn_login.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (fld_userNickname.getText().length() == 0 || fld_userPassword.getText().length() == 0) {
-					Helper.showMsg("fill");
-				} else {
-					Manager manager = new Manager();
-					manager.setId(123);
-					manager.setNickname("ercan");
-					manager.setPassword("1234");
-
-					MenuGUI menuGui = new MenuGUI(manager);
-					menuGui.setVisible(true);
-					dispose();
-				}
-				
-
-				
-			}
-		});
+            public void actionPerformed(ActionEvent e) {
+                if (fld_userNickname.getText().isEmpty() || fld_userPassword.getText().isEmpty()) {
+                    Helper.showMsg("fill");
+	                } else {
+	                    try {
+	                        Connection con = conn.connectDB();
+	                        java.sql.Statement st = con.createStatement();
+	                        ResultSet rs = st.executeQuery("SELECT * FROM manager");
+	                        while (rs.next()) {
+	                        	if (fld_userNickname.getText().equals(rs.getString("nickname")) && fld_userPassword.getText().equals(rs.getString("password"))) {
+	                                Manager manager = new Manager();
+	                                manager.setId(rs.getInt("id"));
+	                                manager.setNickname(rs.getString("nickname"));
+	                                manager.setPassword(rs.getString("password"));
+	                                MenuGUI menuGUI = new MenuGUI(manager);
+	                                menuGUI.setVisible(true);
+	                                dispose();
+	                        } else {
+	                            Helper.showMsg("invalid"); // Hatalı kullanıcı adı veya şifre
+	                        }
+                        }
+                    } catch (SQLException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+            }
+        });
         
         JLabel lbl_kullaiciAdi = new JLabel("Kullanıcı Adı:");
         lbl_kullaiciAdi.setFont(new Font("Yu Gothic Medium", Font.BOLD, 20));

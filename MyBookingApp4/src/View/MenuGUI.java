@@ -5,6 +5,7 @@ import java.awt.EventQueue;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -87,7 +88,6 @@ public class MenuGUI extends JFrame {
 		        dispose();
 		    }
 		});
-
 		menu_product.setHorizontalAlignment(SwingConstants.CENTER);
 		menu_product.setFont(new Font("Yu Gothic Medium", Font.BOLD, 25));
 		menu_product.setBackground(Color.WHITE);
@@ -97,6 +97,19 @@ public class MenuGUI extends JFrame {
 		panel_menuItems.add(menu_product);
 		
 		JMenuItem menu_employee = new JMenuItem("Çalışan Yönetimi");
+		menu_employee.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+				try {
+			        EmployeeManagementGUI employeeManagement = new EmployeeManagementGUI();
+			        employeeManagement.setVisible(true);
+			        dispose();
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+
+		    }
+		});
 		menu_employee.setBackground(Color.WHITE);
 		menu_employee.setHorizontalAlignment(SwingConstants.CENTER);
 		menu_employee.setFont(new Font("Yu Gothic Medium", Font.BOLD, 25));
@@ -125,16 +138,16 @@ public class MenuGUI extends JFrame {
 		lbl_loggedInUser_1_1_1.setBounds(10, 282, 370, 143);
 		panel_menuInfos.add(lbl_loggedInUser_1_1_1);
 		
-		JLabel lbl_loggedInUser = new JLabel("Kullanıcı: Ercan Bey");
-		lbl_loggedInUser.setHorizontalAlignment(SwingConstants.RIGHT);
+		JLabel lbl_loggedInUser = new JLabel("Hosgeldiniz, Sayın <dynamic>");
+		lbl_loggedInUser.setHorizontalAlignment(SwingConstants.LEFT);
 		lbl_loggedInUser.setFont(new Font("Yu Gothic Medium", Font.BOLD, 20));
-		lbl_loggedInUser.setBounds(536, 10, 290, 36);
+		lbl_loggedInUser.setBounds(10, 15, 390, 36);
 		panelMainComponents.add(lbl_loggedInUser);
 		
 		JLabel lbl_loggedInUser_1 = new JLabel("Menü");
-		lbl_loggedInUser_1.setHorizontalAlignment(SwingConstants.LEFT);
+		lbl_loggedInUser_1.setHorizontalAlignment(SwingConstants.RIGHT);
 		lbl_loggedInUser_1.setFont(new Font("Yu Gothic Medium", Font.BOLD, 20));
-		lbl_loggedInUser_1.setBounds(10, 10, 94, 36);
+		lbl_loggedInUser_1.setBounds(732, 15, 94, 36);
 		panelMainComponents.add(lbl_loggedInUser_1);
 	}
 }
