@@ -1,6 +1,7 @@
 package View;
 
 import java.awt.EventQueue;
+import java.awt.FlowLayout;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -9,8 +10,12 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.JTabbedPane;
 import javax.swing.JLabel;
 import java.awt.Font;
+import java.awt.Toolkit;
+
 import javax.swing.SwingConstants;
 import java.awt.Color;
+import java.awt.Dimension;
+
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
@@ -24,23 +29,28 @@ import javax.swing.border.EtchedBorder;
 import Helper.Helper;
 import Model.Manager;
 import View.MenuGUI;
+import javax.swing.Icon;
+import java.awt.BorderLayout;
 
 public class LoginGUI extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel w_pane;
-	private JTextField fld_nickname;
-	private JTextField fld_password;
-
-	/**
-	 * Launch the application.
-	 */
+	private JTextField fld_userNickname;
+	private JTextField fld_userPassword;
+	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					LoginGUI frame = new LoginGUI();
-					frame.setVisible(true);
+					  LoginGUI frame = new LoginGUI();
+					  frame.pack();
+					  Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+					  int height = screenSize.height;
+					  int width = screenSize.width;
+					  frame.setSize(width, height);			  
+					  frame.setVisible(true);
+				      frame.setLocationRelativeTo(null); // this method display the JFrame to center position of a screen
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -48,105 +58,103 @@ public class LoginGUI extends JFrame {
 		});
 	}
 
-	/**
-	 * Create the frame.
-	 */
-	public LoginGUI() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 844, 710);
-		w_pane = new JPanel();
-		w_pane.setBackground(Color.WHITE);
-		w_pane.setBorder(new EmptyBorder(5, 5, 5, 5));
+    public LoginGUI() {
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setBounds(100, 100, 850, 700);
+        w_pane = new JPanel();
+        w_pane.setBackground(Color.WHITE);
+        w_pane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
-		setContentPane(w_pane);
-		w_pane.setLayout(null);
-		
-		JLabel lblMybookingappUygulamasnaHogeldiniz = new JLabel("MyBookingApp Uygulamasına Hoşgeldiniz");
-		lblMybookingappUygulamasnaHogeldiniz.setHorizontalAlignment(SwingConstants.CENTER);
-		lblMybookingappUygulamasnaHogeldiniz.setFont(new Font("Yu Gothic Medium", Font.BOLD, 34));
-		lblMybookingappUygulamasnaHogeldiniz.setBounds(10, 388, 810, 49);
-		w_pane.add(lblMybookingappUygulamasnaHogeldiniz);
-		
-		JLabel lbl_logo11 = new JLabel(new ImageIcon(getClass().getResource("login.jpg")));
-		lbl_logo11.setBounds(206, 0, 419, 378);
-		w_pane.add(lbl_logo11);
-		
-		JLabel lbl_kullaiciAdi = new JLabel("Kullanıcı Adı:");
-		lbl_kullaiciAdi.setFont(new Font("Yu Gothic Medium", Font.BOLD, 20));
-		lbl_kullaiciAdi.setBounds(205, 466, 138, 36);
-		w_pane.add(lbl_kullaiciAdi);
-		
-		fld_nickname = new JTextField();
-		fld_nickname.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		fld_nickname.setColumns(10);
-		fld_nickname.setBounds(355, 463, 280, 36);
-		w_pane.add(fld_nickname);
-		
-		JLabel lbl_kullaiciAdi_1 = new JLabel("Şifre:");
-		lbl_kullaiciAdi_1.setVerticalAlignment(SwingConstants.BOTTOM);
-		lbl_kullaiciAdi_1.setHorizontalAlignment(SwingConstants.LEFT);
-		lbl_kullaiciAdi_1.setFont(new Font("Yu Gothic Medium", Font.BOLD, 20));
-		lbl_kullaiciAdi_1.setBounds(206, 522, 138, 33);
-		w_pane.add(lbl_kullaiciAdi_1);
-		
-		fld_password = new JTextField();
-		fld_password.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		fld_password.setColumns(10);
-		fld_password.setBounds(355, 519, 280, 36);
-		w_pane.add(fld_password);
-		
-		JPanel panel = new JPanel();
-		panel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
-		panel.setBounds(150, 440, 573, 210);
-		w_pane.add(panel);
-		panel.setLayout(null);
-		
-		JButton btn_login = new JButton("Giriş Yap");
-		btn_login.setBounds(226, 131, 150, 58);
-		panel.add(btn_login);
-		btn_login.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					if (fld_nickname.getText().length() == 0 || fld_password.getText().length() == 0) {
-						Helper.showMsg("fill");
-					} else {
-						Manager manager = new Manager();
-						manager.setId(1);
-						manager.setNickname("manager");
-						manager.setPassword("1234");
+        setContentPane(w_pane);
+        w_pane.setLayout(new BorderLayout(0, 0));
 
-						MenuGUI menuGUI = new MenuGUI(manager);
-						menuGUI.setVisible(true);
-						dispose();
-					}
-					
-//					} else {
-//					try {
-//						Connection con = conn.connDB();
-//						java.sql.Statement st = con.createStatement();
-//						ResultSet rs = st.executeQuery("SELECT * FROM user");
-//						while (rs.next()) {
-//							if (fld_doktorTc.getText().equals(rs.getString("tcno"))
-//									&& fld_doktorPass.getText().equals(rs.getString("password"))) {
-//								Bashekim bhBashekim = new Bashekim();
-//								bhBashekim.setId(rs.getInt("id"));
-//								bhBashekim.setPassword(rs.getString("password"));
-//								bhBashekim.setTcno(rs.getString("tcno"));
-//								bhBashekim.setName(rs.getString("name"));
-//								bhBashekim.setType(rs.getString("type"));
-//								BashekimGUI bGUI = new BashekimGUI(bhBashekim);
-//								bGUI.setVisible(true);
-//								dispose();
-//							}
-//						}
-//					} catch (SQLException e1) {
-//						// TODO Auto-generated catch block
-//						e1.printStackTrace();
-//					}
-//				}
-						
+        JPanel panelMainComponents = new JPanel();
+        panelMainComponents.setBackground(Color.WHITE);
+        w_pane.add(panelMainComponents);
+        panelMainComponents.setLayout(null);
+
+        JLabel lbl_logo = new JLabel(new ImageIcon(getClass().getResource("login.jpg")));
+        lbl_logo.setBounds(51, 58, 712, 336);
+        panelMainComponents.add(lbl_logo);
+
+        JLabel lblMybookingappUygulamasnaHogeldiniz = new JLabel("MyBookingApp Uygulamasına Hoşgeldiniz");
+        lblMybookingappUygulamasnaHogeldiniz.setHorizontalAlignment(SwingConstants.CENTER);
+        lblMybookingappUygulamasnaHogeldiniz.setFont(new Font("Yu Gothic Medium", Font.BOLD, 34));
+        lblMybookingappUygulamasnaHogeldiniz.setBounds(60, 5, 703, 55);
+        panelMainComponents.add(lblMybookingappUygulamasnaHogeldiniz);
+        
+        JPanel panel = new JPanel();
+        panel.setLayout(null);
+        panel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+        panel.setBounds(132, 444, 576, 209);
+        panelMainComponents.add(panel);
+        
+        JButton btn_login = new JButton("Giriş Yap");
+        btn_login.setFont(new Font("Yu Gothic Medium", Font.BOLD, 17));
+        btn_login.setBounds(226, 131, 150, 58);
+        panel.add(btn_login);
+        btn_login.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (fld_userNickname.getText().length() == 0 || fld_userPassword.getText().length() == 0) {
+					Helper.showMsg("fill");
+				} else {
+					Manager manager = new Manager();
+					manager.setId(123);
+					manager.setNickname("ercan");
+					manager.setPassword("1234");
+
+					MenuGUI menuGui = new MenuGUI(manager);
+					menuGui.setVisible(true);
+					dispose();
 				}
-			});
-		
-		btn_login.setFont(new Font("Yu Gothic Medium", Font.BOLD, 17));
-	}
+				
+//			} else {
+//				try {
+//					Connection con = conn.connDB();
+//					java.sql.Statement st = con.createStatement();
+//					ResultSet rs = st.executeQuery("SELECT * FROM user");
+//					while(rs.next()) {
+//						if (fld_doktorTc.getText().equals(rs.getString("tcno")) && fld_doktorPass.getText().equals(rs.getString("password"))) {
+//						 Bashekim bhBashekim = new Bashekim();
+//						 bhBashekim.setId(rs.getInt("id"));
+//						 bhBashekim.setPassword(rs.getString("password"));
+//						 bhBashekim.setTcno(rs.getString("tcno"));
+//						 bhBashekim.setName(rs.getString("name"));
+//						 bhBashekim.setType(rs.getString("type"));
+//						System.out.println(bhBashekim.getName());
+//						}
+//					}
+//				} catch (SQLException e1) {
+//					// TODO Auto-generated catch block
+//					e1.printStackTrace();
+//				}
+//			}	
+				
+			}
+		});
+        
+        JLabel lbl_kullaiciAdi = new JLabel("Kullanıcı Adı:");
+        lbl_kullaiciAdi.setFont(new Font("Yu Gothic Medium", Font.BOLD, 20));
+        lbl_kullaiciAdi.setBounds(49, 34, 138, 36);
+        panel.add(lbl_kullaiciAdi);
+        
+        fld_userNickname = new JTextField();
+        fld_userNickname.setFont(new Font("Tahoma", Font.PLAIN, 15));
+        fld_userNickname.setColumns(10);
+        fld_userNickname.setBounds(199, 31, 280, 36);
+        panel.add(fld_userNickname);
+        
+        JLabel lbl_kullaiciAdi_1 = new JLabel("Şifre:");
+        lbl_kullaiciAdi_1.setVerticalAlignment(SwingConstants.BOTTOM);
+        lbl_kullaiciAdi_1.setHorizontalAlignment(SwingConstants.LEFT);
+        lbl_kullaiciAdi_1.setFont(new Font("Yu Gothic Medium", Font.BOLD, 20));
+        lbl_kullaiciAdi_1.setBounds(50, 90, 138, 33);
+        panel.add(lbl_kullaiciAdi_1);
+        
+        fld_userPassword = new JTextField();
+        fld_userPassword.setFont(new Font("Tahoma", Font.PLAIN, 15));
+        fld_userPassword.setColumns(10);
+        fld_userPassword.setBounds(199, 87, 280, 36);
+        panel.add(fld_userPassword);
+    }
 }
