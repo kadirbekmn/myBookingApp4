@@ -1,29 +1,21 @@
 package Helper;
-
-import java.sql.Connection;
-import java.sql.Driver;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class DBConnection {
+
+	Connection connection = null;
+	public DBConnection() {
+		// TODO Auto-generated constructor stub
+	}
 	
-//    Connection c = null;
-//    
-//    public DBConnection() {
-//        try {
-//            Class.forName("com.mysql.cj.jdbc.Driver"); // MySQL JDBC sürücüsünü yükle
-//        } catch (ClassNotFoundException e) {
-//            e.printStackTrace();
-//        }
-//    }
-//    
-//    public Connection connDB() {
-//        try {
-//            this.c = DriverManager.getConnection("jdbc:mysql://localhost:3306/hospital?user=root&password=1234");
-//            return c;
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//        return c;
-//    } 
+	public Connection connectDB() {
+		try {
+			connection = DriverManager.getConnection("jdbc:mariadb://localhost:3306/mybookingapp4?user=root&password=2001hasan");
+			return connection;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return connection;
+	}
 }
