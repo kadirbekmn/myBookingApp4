@@ -28,7 +28,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 
-public class ProductManagmentGUI extends JFrame {
+public class ProductManagementGUI extends JFrame {
 
     private JPanel w_pane;
     static Manager manager = new Manager();
@@ -50,7 +50,7 @@ public class ProductManagmentGUI extends JFrame {
         EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
-                    ProductManagmentGUI frame = new ProductManagmentGUI();
+                    ProductManagementGUI frame = new ProductManagementGUI(manager);;
                     //frame.setUndecorated(true); // Remove frame decorations
                     frame.setExtendedState(JFrame.MAXIMIZED_BOTH); // Maximize the frame
                     frame.setVisible(true);
@@ -65,7 +65,7 @@ public class ProductManagmentGUI extends JFrame {
      * Create the frame.
      * @throws SQLException 
      */
-    public ProductManagmentGUI() throws SQLException {
+    public ProductManagementGUI(Manager manager) {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
     	productDefaultTableModel = new DefaultTableModel();
@@ -78,13 +78,18 @@ public class ProductManagmentGUI extends JFrame {
 		productDefaultTableModel.setColumnIdentifiers(columnProductTable);
 		productDataObjects = new Object[5];
 		
-		for (int i = 0; i < product.getProductsList().size(); i++) {
-			productDataObjects[0] = product.getProductsList().get(i).getId();
-			productDataObjects[1] = product.getProductsList().get(i).getName();
-			productDataObjects[2] = product.getProductsList().get(i).getStock();
-			productDataObjects[3] = product.getProductsList().get(i).getPurchasePrice();
-			productDataObjects[4] = product.getProductsList().get(i).getSalePrice();
-			productDefaultTableModel.addRow(productDataObjects);
+		try {
+			for (int i = 0; i < product.getProductsList().size(); i++) {
+				productDataObjects[0] = product.getProductsList().get(i).getId();
+				productDataObjects[1] = product.getProductsList().get(i).getName();
+				productDataObjects[2] = product.getProductsList().get(i).getStock();
+				productDataObjects[3] = product.getProductsList().get(i).getPurchasePrice();
+				productDataObjects[4] = product.getProductsList().get(i).getSalePrice();
+				productDefaultTableModel.addRow(productDataObjects);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		
 
