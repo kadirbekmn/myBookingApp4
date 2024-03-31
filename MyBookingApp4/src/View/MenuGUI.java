@@ -34,7 +34,7 @@ public class MenuGUI extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					MenuGUI frame = new MenuGUI(manager);
+					MenuGUI frame = new MenuGUI();
 					  frame.pack();
 					  Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 					  int height = screenSize.height;
@@ -50,9 +50,9 @@ public class MenuGUI extends JFrame {
 		});
 	}
 
-	public MenuGUI(Manager manager) {
+	public MenuGUI() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 850, 700);
+        setBounds(100, 100, 850, 700);
 		w_pane = new JPanel();
 		w_pane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(w_pane);
@@ -144,10 +144,16 @@ public class MenuGUI extends JFrame {
 		lbl_loggedInUser.setBounds(10, 15, 390, 36);
 		panelMainComponents.add(lbl_loggedInUser);
 		
-		JLabel lbl_loggedInUser_1 = new JLabel("Menü");
-		lbl_loggedInUser_1.setHorizontalAlignment(SwingConstants.RIGHT);
-		lbl_loggedInUser_1.setFont(new Font("Yu Gothic Medium", Font.BOLD, 20));
-		lbl_loggedInUser_1.setBounds(732, 15, 94, 36);
-		panelMainComponents.add(lbl_loggedInUser_1);
+		JButton btn_exit = new JButton("Çıkış Yap");
+		btn_exit.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		        LoginGUI loginGUI = new LoginGUI();
+		        loginGUI.setVisible(true);
+		        dispose();
+		    }
+		});
+		btn_exit.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		btn_exit.setBounds(645, 15, 181, 27);
+		panelMainComponents.add(btn_exit);
 	}
 }

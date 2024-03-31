@@ -111,11 +111,11 @@ public class LoginGUI extends JFrame {
 	                                manager.setId(rs.getInt("id"));
 	                                manager.setNickname(rs.getString("nickname"));
 	                                manager.setPassword(rs.getString("password"));
-	                                MenuGUI menuGUI = new MenuGUI(manager);
+	                                MenuGUI menuGUI = new MenuGUI();
 	                                menuGUI.setVisible(true);
 	                                dispose();
 	                        } else {
-	                            Helper.showMsg("invalid"); // Hatalı kullanıcı adı veya şifre
+	                            Helper.showMsg("invalid");
 	                        }
                         }
                     } catch (SQLException ex) {

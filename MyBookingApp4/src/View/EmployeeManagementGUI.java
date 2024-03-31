@@ -82,7 +82,7 @@ public class EmployeeManagementGUI extends JFrame {
 		
 		JPanel panel = new JPanel();
 		panel.setLayout(null);
-		w_tab.addTab("New tab", null, panel, null);
+		w_tab.addTab("Çalışan Yönetim Sekmesi", null, panel, null);
 		
 		JLabel lblalanAdSoyad = new JLabel("Çalışan Ad Soyad:");
 		lblalanAdSoyad.setFont(new Font("Yu Gothic Medium", Font.BOLD, 15));
@@ -118,7 +118,7 @@ public class EmployeeManagementGUI extends JFrame {
 		                    Helper.showMsg("success");
 		                    fld_employeeName.setText(null);
 		                    fld_EmployeeType.setText(null);
-		                    updateEmployeeModel(); // Tabloyu güncelle
+		                    updateEmployeeModel();
 		                }
 		            } catch (SQLException e1) {
 		                e1.printStackTrace();
@@ -132,27 +132,28 @@ public class EmployeeManagementGUI extends JFrame {
 		panel.add(btn_addEmployee);
 		
 		JButton btn_delEmployee = new JButton("Sil");
-		btn_delEmployee.addActionListener((ActionListener) new ActionListener() {
+		btn_delEmployee.addActionListener(new ActionListener() {
 		    public void actionPerformed(ActionEvent e) {
 		        if (fld_employeeId.getText().length() == 0) {
-		            Helper.showMsg("Lütfen geçerli bir doktor seçiniz !");
+		            Helper.showMsg("Lütfen geçerli bir çalışan seçiniz !");
 		        } else {
-		        	if (Helper.confirm("sure")) {
-			        	int selectedId = Integer.parseInt(btn_delEmployee.getText());
-			        	try {
-				            boolean control = employee.deleteEmployee(selectedId);
-			            if (control) {
-				            Helper.showMsg("success");
-				            fld_employeeId.setText(null);
-				            updateEmployeeModel();
-			            }
-			        	} catch (SQLException e1) {
-			        		e1.printStackTrace();
-			        	}
-		        	}
+		            if (Helper.confirm("sure")) {
+		                int selectedId = Integer.parseInt(fld_employeeId.getText());
+		                try {
+		                    boolean control = employee.deleteEmployee(selectedId);
+		                    if (control) {
+		                        Helper.showMsg("success");
+		                        fld_employeeId.setText(null);
+		                        updateEmployeeModel();
+		                    }
+		                } catch (SQLException e1) {
+		                    e1.printStackTrace();
+		                }
+		            }
 		        }
 		    }
 		});
+
 		btn_delEmployee.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		btn_delEmployee.setBounds(668, 323, 136, 25);
 		panel.add(btn_delEmployee);
@@ -175,14 +176,12 @@ public class EmployeeManagementGUI extends JFrame {
 		table_employee = new JTable(employeeModel);
 		w_scrollDoctor.setViewportView(table_employee);
 		
-		
 		table_employee.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
 				try {
 					fld_employeeId.setText(table_employee.getValueAt(table_employee.getSelectedRow(), 0).toString());
-
 				} catch(Exception e4) {
 					
 				}
@@ -193,7 +192,6 @@ public class EmployeeManagementGUI extends JFrame {
 			
 			@Override
 			public void tableChanged(TableModelEvent e) {
-				
 				if (e.getType() == TableModelEvent.UPDATE) {
 					int selectedId = Integer.parseInt(table_employee.getValueAt(table_employee.getSelectedRow(), 0).toString());
 					String selectedName = table_employee.getValueAt(table_employee.getSelectedRow(), 1).toString();
@@ -204,18 +202,25 @@ public class EmployeeManagementGUI extends JFrame {
 						
 					}
 				}
-				
 			}
 		});
 		
-		JLabel lblNewLabel = new JLabel("Hosgeldiniz, Sayın <dynamic>");
+		JLabel lblNewLabel = new JLabel("Çalışan Yönetim Ekranı");
 		lblNewLabel.setFont(new Font("Yu Gothic UI Semibold", Font.PLAIN, 18));
 		lblNewLabel.setBounds(10, 10, 311, 25);
 		contentPane.add(lblNewLabel);
 		
-		JButton btn_exit = new JButton("Çıkış Yap");
+		JButton btn_exit = new JButton("Menüye Geri Dön");
+		btn_exit.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		        MenuGUI menuGUI = new MenuGUI();
+		        menuGUI.setVisible(true);
+		        dispose();
+		    }
+		});
+
 		btn_exit.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		btn_exit.setBounds(716, 21, 110, 27);
+		btn_exit.setBounds(645, 21, 181, 27);
 		contentPane.add(btn_exit);
 	}
 	
