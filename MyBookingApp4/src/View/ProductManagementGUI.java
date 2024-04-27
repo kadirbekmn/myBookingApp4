@@ -44,9 +44,6 @@ public class ProductManagementGUI extends JFrame {
     private JTable table_product;
     private JButton btn_exit;
 
-    /**
-     * Launch the application.
-     */
     public static void main(String[] args) {
         EventQueue.invokeLater(new Runnable() {
             public void run() {
@@ -62,10 +59,6 @@ public class ProductManagementGUI extends JFrame {
         });
     }
 
-    /**
-     * Create the frame.
-     * @throws SQLException 
-     */
     public ProductManagementGUI(Manager manager) {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
@@ -93,12 +86,6 @@ public class ProductManagementGUI extends JFrame {
 			e.printStackTrace();
 		}
 		
-
-     
-        
-      
-
-
         w_pane = new JPanel();
         w_pane.setBorder(new EmptyBorder(5, 5, 5, 5));
         setContentPane(w_pane);
@@ -153,7 +140,6 @@ public class ProductManagementGUI extends JFrame {
             		addProductDialog.setVisible(true);
 					updateProductDefaultTableModel();
 				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
         	}
@@ -161,16 +147,14 @@ public class ProductManagementGUI extends JFrame {
         btn_addProduct.setBounds(284, 38, 90, 25);
         center_panel.add(btn_addProduct);
         
-        JScrollPane w_scrollProduct = new JScrollPane();
+        JScrollPane w_scrollProduct = new JScrollPane();w
         w_scrollProduct.setBounds(10, 70, 404, 148);
         center_panel.add(w_scrollProduct);
         
         table_product = new JTable(productDefaultTableModel);
         w_scrollProduct.setViewportView(table_product);
-        
-		
-
     }
+    
 	public void updateProductDefaultTableModel() throws SQLException {
 		DefaultTableModel clearTableModel = (DefaultTableModel) table_product.getModel();
 		clearTableModel.setRowCount(0);
@@ -183,5 +167,4 @@ public class ProductManagementGUI extends JFrame {
 			productDefaultTableModel.addRow(productDataObjects);
 		}
 	}
-
 }

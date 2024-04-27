@@ -39,6 +39,8 @@ public class EmployeeManagementGUI extends JFrame {
 	static Employee employee = new Employee();
 	private Object[] employeeData = null;
 	private DefaultTableModel employeeModel = null;
+    static AddEmployeeDialogGUI addEmployeeDialogGUI;
+
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -83,91 +85,6 @@ public class EmployeeManagementGUI extends JFrame {
 		JPanel panel = new JPanel();
 		panel.setLayout(null);
 		w_tab.addTab("Çalışan Yönetim Sekmesi", null, panel, null);
-		
-		JLabel lblalanAdSoyad = new JLabel("Çalışan Ad Soyad:");
-		lblalanAdSoyad.setFont(new Font("Yu Gothic Medium", Font.BOLD, 15));
-		lblalanAdSoyad.setBounds(668, 36, 136, 25);
-		panel.add(lblalanAdSoyad);
-		
-		fld_employeeName = new JTextField();
-		fld_employeeName.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		fld_employeeName.setColumns(10);
-		fld_employeeName.setBounds(668, 58, 136, 25);
-		panel.add(fld_employeeName);
-		
-		JLabel label1 = new JLabel("Çalışan Tipi:");
-		label1.setFont(new Font("Yu Gothic Medium", Font.BOLD, 15));
-		label1.setBounds(668, 103, 114, 25);
-		panel.add(label1);
-		
-		fld_EmployeeType = new JTextField();
-		fld_EmployeeType.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		fld_EmployeeType.setColumns(10);
-		fld_EmployeeType.setBounds(668, 125, 136, 25);
-		panel.add(fld_EmployeeType);
-		
-		JButton btn_addEmployee = new JButton("Ekle");
-		btn_addEmployee.addActionListener(new ActionListener() {
-		    public void actionPerformed(ActionEvent e) {
-		        if (fld_employeeName.getText().length() == 0 || fld_EmployeeType.getText().length() == 0) {
-		            Helper.showMsg("fill");
-		        } else {
-		            try {
-		                boolean control = employee.addEmployee(fld_employeeName.getText(), fld_EmployeeType.getText());
-		                if (control) {
-		                    Helper.showMsg("success");
-		                    fld_employeeName.setText(null);
-		                    fld_EmployeeType.setText(null);
-		                    updateEmployeeModel();
-		                }
-		            } catch (SQLException e1) {
-		                e1.printStackTrace();
-		            }
-		        }
-		    }
-		});
-		
-		btn_addEmployee.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		btn_addEmployee.setBounds(668, 172, 136, 25);
-		panel.add(btn_addEmployee);
-		
-		JButton btn_delEmployee = new JButton("Sil");
-		btn_delEmployee.addActionListener(new ActionListener() {
-		    public void actionPerformed(ActionEvent e) {
-		        if (fld_employeeId.getText().length() == 0) {
-		            Helper.showMsg("Lütfen geçerli bir çalışan seçiniz !");
-		        } else {
-		            if (Helper.confirm("sure")) {
-		                int selectedId = Integer.parseInt(fld_employeeId.getText());
-		                try {
-		                    boolean control = employee.deleteEmployee(selectedId);
-		                    if (control) {
-		                        Helper.showMsg("success");
-		                        fld_employeeId.setText(null);
-		                        updateEmployeeModel();
-		                    }
-		                } catch (SQLException e1) {
-		                    e1.printStackTrace();
-		                }
-		            }
-		        }
-		    }
-		});
-
-		btn_delEmployee.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		btn_delEmployee.setBounds(668, 323, 136, 25);
-		panel.add(btn_delEmployee);
-		
-		JLabel label3 = new JLabel("Kullanıcı ID:");
-		label3.setFont(new Font("Yu Gothic Medium", Font.BOLD, 15));
-		label3.setBounds(668, 266, 114, 25);
-		panel.add(label3);
-		
-		fld_employeeId = new JTextField();
-		fld_employeeId.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		fld_employeeId.setColumns(10);
-		fld_employeeId.setBounds(668, 288, 136, 25);
-		panel.add(fld_employeeId);
 		
 		JScrollPane w_scrollDoctor = new JScrollPane();
 		w_scrollDoctor.setBounds(10, 10, 629, 338);
@@ -222,6 +139,60 @@ public class EmployeeManagementGUI extends JFrame {
 		btn_exit.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		btn_exit.setBounds(645, 21, 181, 27);
 		contentPane.add(btn_exit);
+		
+		JButton btn_addEmployee = new JButton("Yeni Çalışan Ekle");
+		btn_addEmployee.setBounds(10, 178, 136, 25);
+		contentPane.add(btn_addEmployee);
+		btn_addEmployee.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		try {
+        			addEmployeeDialogGUI = new AddEmployeeDialogGUI();
+        			addEmployeeDialogGUI.setVisible(true);
+        			updateEmployeeModel();
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
+        	}
+        });
+		
+		btn_addEmployee.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		
+		JLabel label3 = new JLabel("Çalışan ID:");
+		label3.setBounds(400, 188, 114, 25);
+		contentPane.add(label3);
+		label3.setFont(new Font("Yu Gothic Medium", Font.BOLD, 15));
+		
+		fld_employeeId = new JTextField();
+		fld_employeeId.setBounds(524, 184, 136, 25);
+		contentPane.add(fld_employeeId);
+		fld_employeeId.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		fld_employeeId.setColumns(10);
+		
+		JButton btn_delEmployee = new JButton("Sil");
+		btn_delEmployee.setBounds(670, 184, 136, 25);
+		contentPane.add(btn_delEmployee);
+		btn_delEmployee.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		        if (fld_employeeId.getText().length() == 0) {
+		            Helper.showMsg("Lütfen geçerli bir çalışan seçiniz !");
+		        } else {
+		            if (Helper.confirm("sure")) {
+		                int selectedId = Integer.parseInt(fld_employeeId.getText());
+		                try {
+		                    boolean control = employee.deleteEmployee(selectedId);
+		                    if (control) {
+		                        Helper.showMsg("success");
+		                        fld_employeeId.setText(null);
+		                        updateEmployeeModel();
+		                    }
+		                } catch (SQLException e1) {
+		                    e1.printStackTrace();
+		                }
+		            }
+		        }
+		    }
+		});	
+		btn_delEmployee.setFont(new Font("Tahoma", Font.PLAIN, 15));
 	}
 	
 	public void updateEmployeeModel() throws SQLException {
