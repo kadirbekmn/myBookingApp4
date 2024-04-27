@@ -108,28 +108,21 @@ public class AddProductDialogGUI extends JDialog {
 						} else {
 							boolean control = false;
 							try {
-								control = product.addProduct(textField_productName.getText(), Integer.parseInt(textField_purchasePrice.getText()) , Integer.parseInt(textField_salePrice.getText()), 
+								control = product.addProduct(textField_productName.getText(), Integer.parseInt(textField_purchasePrice.getText()), Integer.parseInt(textField_salePrice.getText()), 
 									Integer.parseInt(textField_stock.getText()));
 							} catch (NumberFormatException e1) {
-								// TODO Auto-generated catch block
 								e1.printStackTrace();
 							} catch (SQLException e1) {
-								// TODO Auto-generated catch block
 								e1.printStackTrace();
 							}
 							if (control) {
 								Helper.showMsg("success");
 							    setVisible(false);
-								
 							} else {
 								Helper.showMsg("qq");
 							}
-							
-
 						}
-
 					}
-					
 				});
 				saveButton.setActionCommand("OK");
 				buttonPane.add(saveButton);
