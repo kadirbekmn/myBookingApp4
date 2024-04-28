@@ -77,7 +77,7 @@ public class MenuGUI extends JFrame {
 		menu_rezervation.setFont(new Font("Yu Gothic Medium", Font.BOLD, 25));
 		menu_rezervation.setBorderPainted(true);
 		menu_rezervation.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
-		menu_rezervation.setBounds(30, 95, 328, 77);
+		menu_rezervation.setBounds(30, 10, 328, 77);
 		panel_menuItems.add(menu_rezervation);
 
 		JButton menu_product = new JButton("Ürün Yönetimi");
@@ -93,7 +93,7 @@ public class MenuGUI extends JFrame {
 		menu_product.setBackground(Color.WHITE);
 		menu_product.setBorderPainted(true);
 		menu_product.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
-		menu_product.setBounds(30, 216, 328, 77);
+		menu_product.setBounds(30, 97, 328, 77);
 		panel_menuItems.add(menu_product);
 
 		JMenuItem menu_employee = new JMenuItem("Çalışan Yönetimi");
@@ -114,8 +114,40 @@ public class MenuGUI extends JFrame {
 		menu_employee.setFont(new Font("Yu Gothic Medium", Font.BOLD, 25));
 		menu_employee.setBorderPainted(true);
 		menu_employee.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
-		menu_employee.setBounds(30, 356, 328, 77);
+		menu_employee.setBounds(30, 184, 328, 77);
 		panel_menuItems.add(menu_employee);
+		menu_employee.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					OperationManagementGUI operationManagement = new OperationManagementGUI();
+					operationManagement.setVisible(true);
+					dispose();
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
+
+			}
+		});
+
+		JMenuItem menu_operation = new JMenuItem("Operasyon Yönetimi");
+		menu_operation.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					OperationManagementGUI operationManagement = new OperationManagementGUI();
+					operationManagement.setVisible(true);
+					dispose();
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
+		menu_operation.setHorizontalAlignment(SwingConstants.CENTER);
+		menu_operation.setFont(new Font("Yu Gothic Medium", Font.BOLD, 25));
+		menu_operation.setBorderPainted(true);
+		menu_operation.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+		menu_operation.setBackground(Color.WHITE);
+		menu_operation.setBounds(30, 271, 328, 77);
+		panel_menuItems.add(menu_operation);
 
 		JPanel panel_menuInfos = new JPanel();
 		panel_menuInfos.setLayout(null);

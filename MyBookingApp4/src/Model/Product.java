@@ -8,7 +8,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 import Helper.DBConnection;
-import View.ProductManagementGUI;
 
 public class Product {
 
