@@ -17,6 +17,9 @@ import javax.swing.JTextField;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.awt.event.ActionEvent;
+import java.awt.Color;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class AddProductDialogGUI extends JDialog {
 
@@ -38,7 +41,18 @@ public class AddProductDialogGUI extends JDialog {
 	}
 
 	public AddProductDialogGUI() {
-		setBounds(100, 100, 285, 300);
+
+		JLabel lbl_showValidationStock = new JLabel("");
+		lbl_showValidationStock.setForeground(Color.RED);
+		lbl_showValidationStock.setBounds(190, 57, 80, 20);
+		contentPanel.add(lbl_showValidationStock);
+
+		JLabel lbl_showValidationSalePrice = new JLabel("");
+		lbl_showValidationSalePrice.setForeground(Color.RED);
+		lbl_showValidationSalePrice.setBounds(190, 143, 80, 20);
+		contentPanel.add(lbl_showValidationSalePrice);
+
+		setBounds(100, 100, 306, 300);
 		setTitle("Ürün Ekle");
 		setModal(true);
 
@@ -50,43 +64,100 @@ public class AddProductDialogGUI extends JDialog {
 
 		JLabel lbl_productName = new JLabel("Ürün Adı :");
 		lbl_productName.setFont(new Font("Yu Gothic UI Semibold", Font.PLAIN, 13));
-		lbl_productName.setBounds(10, 54, 67, 14);
+		lbl_productName.setBounds(10, 20, 67, 14);
 		contentPanel.add(lbl_productName);
 
 		JLabel lbl_stock = new JLabel("Stok :");
 		lbl_stock.setFont(new Font("Yu Gothic UI Semibold", Font.PLAIN, 13));
-		lbl_stock.setBounds(10, 79, 67, 14);
+		lbl_stock.setBounds(10, 59, 67, 14);
 		contentPanel.add(lbl_stock);
 
 		JLabel lbl_purchasePrice = new JLabel("Alış Fiyatı :");
 		lbl_purchasePrice.setFont(new Font("Yu Gothic UI Semibold", Font.PLAIN, 13));
-		lbl_purchasePrice.setBounds(10, 104, 67, 14);
+		lbl_purchasePrice.setBounds(10, 101, 67, 14);
 		contentPanel.add(lbl_purchasePrice);
 
 		JLabel lbl_salePrice = new JLabel("Satış Fiyatı :");
 		lbl_salePrice.setFont(new Font("Yu Gothic UI Semibold", Font.PLAIN, 13));
-		lbl_salePrice.setBounds(10, 129, 80, 14);
+		lbl_salePrice.setBounds(10, 145, 80, 14);
 		contentPanel.add(lbl_salePrice);
 
 		textField_salePrice = new JTextField();
-		textField_salePrice.setBounds(94, 127, 86, 20);
+		textField_salePrice.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				String text = textField_salePrice.getText();
+				if (text.length() != 0) {
+					try {
+						int i = Integer.parseInt(text);
+						lbl_showValidationSalePrice.setText("");
+					} catch (NumberFormatException e1) {
+						lbl_showValidationSalePrice.setText("Geçersiz Sayı");
+					}
+				} else {
+					lbl_showValidationSalePrice.setText("");
+				}
+			}
+		});
+		textField_salePrice.setBounds(94, 143, 86, 20);
 		contentPanel.add(textField_salePrice);
 		textField_salePrice.setColumns(10);
 
+		JLabel lbl_showValidationPurchasePrice = new JLabel("");
+		lbl_showValidationPurchasePrice.setForeground(Color.RED);
+		lbl_showValidationPurchasePrice.setBounds(190, 99, 80, 20);
+		contentPanel.add(lbl_showValidationPurchasePrice);
+
 		textField_purchasePrice = new JTextField();
+		textField_purchasePrice.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				String text = textField_purchasePrice.getText();
+				if (text.length() != 0) {
+					try {
+						int i = Integer.parseInt(text);
+						lbl_showValidationPurchasePrice.setText("");
+					} catch (NumberFormatException e1) {
+						lbl_showValidationPurchasePrice.setText("Geçersiz Sayı");
+					}
+				} else {
+					lbl_showValidationPurchasePrice.setText("");
+				}
+			}
+		});
+
 		textField_purchasePrice.setColumns(10);
-		textField_purchasePrice.setBounds(94, 102, 86, 20);
+		textField_purchasePrice.setBounds(94, 99, 86, 20);
 		contentPanel.add(textField_purchasePrice);
 
 		textField_stock = new JTextField();
+		textField_stock.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+
+				String text = textField_stock.getText();
+				if (text.length() != 0) {
+					try {
+						int i = Integer.parseInt(text);
+						lbl_showValidationStock.setText("");
+					} catch (NumberFormatException e1) {
+						lbl_showValidationStock.setText("Geçersiz Sayı");
+					}
+				} else {
+					lbl_showValidationStock.setText("");
+				}
+			}
+		});
+
 		textField_stock.setColumns(10);
-		textField_stock.setBounds(94, 77, 86, 20);
+		textField_stock.setBounds(94, 57, 86, 20);
 		contentPanel.add(textField_stock);
 
 		textField_productName = new JTextField();
 		textField_productName.setColumns(10);
-		textField_productName.setBounds(94, 52, 86, 20);
+		textField_productName.setBounds(94, 18, 86, 20);
 		contentPanel.add(textField_productName);
+
 		{
 			JPanel buttonPane = new JPanel();
 			buttonPane.setBounds(0, 228, 269, 33);
@@ -115,10 +186,13 @@ public class AddProductDialogGUI extends JDialog {
 							if (control) {
 								Helper.showMsg("success");
 								setVisible(false);
+
 							} else {
-								Helper.showMsg("qq");
+								Helper.showMsg("invalid number");
 							}
+
 						}
+
 					}
 				});
 				saveButton.setActionCommand("OK");

@@ -10,23 +10,34 @@ import java.sql.SQLException;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableRowSorter;
 
 import Model.Manager;
 import Model.Product;
 
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
+
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+import javax.swing.RowFilter;
+
 import java.awt.FlowLayout;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.SwingConstants;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.*;
 
 public class ProductManagementGUI extends JFrame {
 
@@ -61,16 +72,27 @@ public class ProductManagementGUI extends JFrame {
 
 	public ProductManagementGUI(Manager manager) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		JButton btn_add = new JButton("➕");
+
+		class ButtonRenderer extends DefaultTableCellRenderer {
+			public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
+					boolean hasFocus, int row, int column) {
+				JButton button = (JButton) value;
+				button.setVisible(true);
+				return button;
+			}
+		}
 
 		productDefaultTableModel = new DefaultTableModel();
-		Object[] columnProductTable = new Object[5];
+		Object[] columnProductTable = new Object[6];
 		columnProductTable[0] = "ID";
 		columnProductTable[1] = "Ürün Adı";
 		columnProductTable[2] = "Stok";
 		columnProductTable[3] = "Alış Fiyatı";
 		columnProductTable[4] = "Satış Fiyatı";
+		columnProductTable[5] = "";
 		productDefaultTableModel.setColumnIdentifiers(columnProductTable);
-		productDataObjects = new Object[5];
+		productDataObjects = new Object[6];
 
 		try {
 			for (int i = 0; i < product.getProductsList().size(); i++) {
@@ -79,12 +101,17 @@ public class ProductManagementGUI extends JFrame {
 				productDataObjects[2] = product.getProductsList().get(i).getStock();
 				productDataObjects[3] = product.getProductsList().get(i).getPurchasePrice();
 				productDataObjects[4] = product.getProductsList().get(i).getSalePrice();
+				productDataObjects[5] = btn_add;
 				productDefaultTableModel.addRow(productDataObjects);
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
+		table_product = new JTable(productDefaultTableModel);
+
+		TableColumn columnUpdate = table_product.getColumnModel().getColumn(5);
+		columnUpdate.setCellRenderer(new ButtonRenderer());
 
 		w_pane = new JPanel();
 		w_pane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -124,6 +151,15 @@ public class ProductManagementGUI extends JFrame {
 		center_panel.add(lbl_productName);
 
 		textField_productName = new JTextField();
+		textField_productName.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				DefaultTableModel obj = (DefaultTableModel) table_product.getModel();
+				TableRowSorter<DefaultTableModel> obj1 = new TableRowSorter<>(obj);
+				table_product.setRowSorter(obj1);
+				obj1.setRowFilter(RowFilter.regexFilter(textField_productName.getText()));
+			}
+		});
 		textField_productName.setBounds(89, 39, 86, 20);
 		center_panel.add(textField_productName);
 		textField_productName.setColumns(10);
@@ -151,7 +187,6 @@ public class ProductManagementGUI extends JFrame {
 		w_scrollProduct.setBounds(10, 70, 404, 148);
 		center_panel.add(w_scrollProduct);
 
-		table_product = new JTable(productDefaultTableModel);
 		w_scrollProduct.setViewportView(table_product);
 	}
 

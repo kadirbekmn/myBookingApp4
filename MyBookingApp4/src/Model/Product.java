@@ -8,11 +8,12 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 import Helper.DBConnection;
+import View.ProductManagementGUI;
 
 public class Product {
 
-	DBConnection dbConnection = new DBConnection();
-	Connection connection = dbConnection.connectDB();
+	DBConnection dbConnection = null;
+	Connection connection = null;
 	ResultSet resultSet = null;
 	Statement statement = null;
 	PreparedStatement preparedStatement = null;
@@ -29,7 +30,8 @@ public class Product {
 	private int count;
 
 	public Product() {
-
+		dbConnection = new DBConnection();
+		connection = dbConnection.connectDB();
 	}
 
 	public Product(int id, String name, int purchasePrice, int salePrice, int stock) {
@@ -134,6 +136,7 @@ public class Product {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+
 		return productList;
 	}
 

@@ -23,6 +23,9 @@ public class Helper {
 		case "invalid":
 			msg = "Hatalı kullanıcı adı veya şifre !";
 			break;
+		case "invalid number":
+			msg = "Lütfen Geçerli Sayı Giriniz !";
+			break;
 		case "success":
 			msg = "İşlem başarılı !";
 			break;
