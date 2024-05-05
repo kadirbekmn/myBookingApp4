@@ -148,6 +148,26 @@ public class MenuGUI extends JFrame {
 		menu_operation.setBackground(Color.WHITE);
 		menu_operation.setBounds(30, 271, 328, 77);
 		panel_menuItems.add(menu_operation);
+		
+		JButton menu_customer = new JButton("Müşteri Yönetimi");
+		menu_customer.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					CustomerManagementGUI customerManagement = new CustomerManagementGUI();
+					customerManagement.setVisible(true);
+					dispose();
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
+		menu_customer.setHorizontalAlignment(SwingConstants.CENTER);
+		menu_customer.setFont(new Font("Yu Gothic Medium", Font.BOLD, 25));
+		menu_customer.setBorderPainted(true);
+		menu_customer.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+		menu_customer.setBackground(Color.WHITE);
+		menu_customer.setBounds(30, 358, 328, 77);
+		panel_menuItems.add(menu_customer);
 
 		JPanel panel_menuInfos = new JPanel();
 		panel_menuInfos.setLayout(null);

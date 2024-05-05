@@ -266,37 +266,36 @@ public class EmployeeManagementGUI extends JFrame {
 		
 		///////
 
+		List<String> operationTypes = null;
+		try {
+		    Operation operation = new Operation();
+		    operationTypes = operation.getOperationTypes();
+		} catch (SQLException e) {
+		    e.printStackTrace();
+		}
 
-//		List<String> operationTypes = null;
-//		try {
-//		    Operation operation = new Operation();
-//		    operationTypes = operation.getOperationTypes();
-//		} catch (SQLException e) {
-//		    e.printStackTrace();
-//		}
-//
-//		JCheckBox[] checkBoxes = new JCheckBox[operationTypes.size()];
-//		for (int i = 0; i < operationTypes.size(); i++) {
-//		    checkBoxes[i] = new JCheckBox(operationTypes.get(i));
-//		    checkBoxes[i].setBounds(10, 116 + (i * 30), 200, 26);
-//		    panel_1.add(checkBoxes[i]);
-//		}
+		JCheckBox[] checkBoxes = new JCheckBox[operationTypes.size()];
+		for (int i = 0; i < operationTypes.size(); i++) {
+		    checkBoxes[i] = new JCheckBox(operationTypes.get(i));
+		    checkBoxes[i].setBounds(10, 116 + (i * 30), 200, 26);
+		    panel_1.add(checkBoxes[i]);
+		}
 
 		JButton operationButton = new JButton("İşlem Seç");
 		operationButton.setBounds(10, 211, 129, 26);
 		panel_1.add(operationButton);
 		
-//		JList list = new JList();
-//		list.setBounds(10, 237, 129, 14);
-//		panel_1.add(list);
-//
-//		operationButton.addActionListener(new ActionListener() {
-//		    public void actionPerformed(ActionEvent e) {
-//		        for (JCheckBox checkBox : checkBoxes) {
-//		            checkBox.setVisible(!checkBox.isVisible());
-//		        }
-//		    }
-//		});
+		JList list = new JList();
+		list.setBounds(10, 237, 129, 14);
+		panel_1.add(list);
+
+		operationButton.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		        for (JCheckBox checkBox : checkBoxes) {
+		            checkBox.setVisible(!checkBox.isVisible());
+		        }
+		    }
+		});
 		
 		
 		
