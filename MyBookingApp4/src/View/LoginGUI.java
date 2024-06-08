@@ -6,6 +6,7 @@ import java.awt.FlowLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JTabbedPane;
 import javax.swing.JLabel;
@@ -143,7 +144,7 @@ public class LoginGUI extends JFrame {
         lbl_kullaiciAdi_1.setBounds(50, 90, 138, 33);
         panel.add(lbl_kullaiciAdi_1);
         
-        fld_userPassword = new JTextField();
+        fld_userPassword = new JPasswordField();
         fld_userPassword.setFont(new Font("Tahoma", Font.PLAIN, 15));
         fld_userPassword.setColumns(10);
         fld_userPassword.setBounds(199, 87, 280, 36);
