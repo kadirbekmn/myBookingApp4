@@ -135,12 +135,34 @@ public class Product {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
+		}  finally {
+			closeResources();
 		}
 
 		return productList;
 	}
+	
+	public ArrayList<Product> getSaledProductsList() throws SQLException {
+		ArrayList<Product> saledproductList = new ArrayList<>();
+		Product objectProduct = null;
+		try {
+			statement = connection.createStatement();
+			resultSet = statement.executeQuery("SELECT * FROM saledProduct");
+			while (resultSet.next()) {
+				objectProduct = new Product(resultSet.getInt("id"), resultSet.getString("name"),
+						resultSet.getInt("purchase_price"), resultSet.getInt("sale_price"), resultSet.getInt("stock"));
+				saledproductList.add(objectProduct);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}  finally {
+			closeResources();
+		}
 
-	public boolean addProduct(String productName, int purchasePrice, int salePrice, int stock) throws SQLException {
+		return saledproductList;
+	}
+
+	public boolean addStockProduct(String productName, int purchasePrice, int salePrice, int stock) throws SQLException {
 		String queryString = "INSERT INTO product (name,purchase_price,sale_price,stock) VALUES (?,?,?,?)";
 		boolean key = false;
 
@@ -157,5 +179,95 @@ public class Product {
 			e.printStackTrace();
 		}
 		return key;
+	}
+	
+	public boolean updateProductStock(int stock, String productName) {
+		String query = "UPDATE product SET stock = ? where name = ?";
+		try {
+			preparedStatement = connection.prepareStatement(query);
+			preparedStatement.setInt(1, stock);
+			preparedStatement.setString(2, productName);
+			preparedStatement.executeUpdate();
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		} finally {
+			closeResources();
+		}
+	}
+	
+	public boolean addSaleProduct(int selectedProductNumber,String productName, int purchasePrice, int salePrice, int stock,Double premiumPercentage,Double premiumFee,Double profit,String sellingEmployeeName) throws SQLException {
+		String query = "INSERT INTO saledproduct (selected_product_number,product_name,purchase_price,sale_price,stock,premium_percentage,premium_fee,profit,selling_employee) VALUES (?,?,?,?,?,?,?,?,?)";
+		boolean key = false;
+
+		try {
+			statement = connection.createStatement();
+			preparedStatement = connection.prepareStatement(query);
+			preparedStatement.setInt(1, selectedProductNumber);
+			preparedStatement.setString(2, productName);
+			preparedStatement.setInt(3, purchasePrice);
+			preparedStatement.setInt(4, salePrice);
+			preparedStatement.setInt(5, stock);
+			preparedStatement.setDouble(6, premiumPercentage);
+			preparedStatement.setDouble(7, premiumFee);
+			preparedStatement.setDouble(8, profit);
+			preparedStatement.setString(9, sellingEmployeeName);
+			preparedStatement.executeUpdate();
+			key = true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return key;
+	}
+	
+	public boolean updateProduct(int id, String name, int purchasePrice, int salePrice, int stock) {
+		String query = "UPDATE product SET name = ?, purchase_price = ?, sale_price = ?, stock= ? WHERE id = ?";
+		try {
+			preparedStatement = connection.prepareStatement(query);
+			preparedStatement.setString(1, name);
+			preparedStatement.setInt(2, purchasePrice);
+			preparedStatement.setInt(3, salePrice);
+			preparedStatement.setInt(4, stock);
+			preparedStatement.setInt(5, id);
+			preparedStatement.executeUpdate();
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		} finally {
+			closeResources();
+		}
+	}
+	
+	public boolean deleteProduct(int id) {
+		String query = "DELETE FROM product WHERE id = ?";
+		try {
+			preparedStatement = connection.prepareStatement(query);
+			preparedStatement.setInt(1, id);
+			preparedStatement.executeUpdate();
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		} finally {
+			closeResources();
+		}
+	}
+	
+	private void closeResources() {
+		try {
+			if (resultSet != null) {
+				resultSet.close();
+			}
+			if (statement != null) {
+				statement.close();
+			}
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 }

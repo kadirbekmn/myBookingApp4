@@ -3,6 +3,7 @@ package View;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 
+import javax.naming.event.NamespaceChangeListener;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
@@ -10,6 +11,7 @@ import javax.swing.border.EmptyBorder;
 
 import Helper.Helper;
 import Model.Product;
+import View.ProductManagementGUI.ButtonEditor;
 
 import javax.swing.JLabel;
 import java.awt.Font;
@@ -28,6 +30,7 @@ public class AddProductDialogGUI extends JDialog {
 	private JTextField textField_purchasePrice;
 	private JTextField textField_stock;
 	private JTextField textField_productName;
+	private int selectedProductId;
 	static Product product = new Product();
 
 	public static void main(String[] args) {
@@ -39,6 +42,17 @@ public class AddProductDialogGUI extends JDialog {
 			e.printStackTrace();
 		}
 	}
+	
+	public AddProductDialogGUI(int productId, String productName, int stock, int purchasePrice, int salePrice) {
+	    this(); // Call the default constructor for GUI initialization
+
+	    // Pre-fill text fields with received data
+	    selectedProductId = productId;
+	    textField_productName.setText(productName);
+	    textField_stock.setText(String.valueOf(stock));
+	    textField_purchasePrice.setText(String.valueOf(purchasePrice));
+	    textField_salePrice.setText(String.valueOf(salePrice));
+	  }
 
 	public AddProductDialogGUI() {
 
@@ -171,10 +185,28 @@ public class AddProductDialogGUI extends JDialog {
 								|| textField_purchasePrice.getText().length() == 0
 								|| textField_salePrice.getText().length() == 0) {
 							Helper.showMsg("fill");
+						} else if (selectedProductId != 0) 
+						{
+							boolean control = false;
+							try {
+								control = product.updateProduct(selectedProductId, textField_productName.getText(),
+										Integer.parseInt(textField_purchasePrice.getText()),
+										Integer.parseInt(textField_salePrice.getText()),
+										Integer.parseInt(textField_stock.getText()));
+							} catch (NumberFormatException e1) {
+								e1.printStackTrace();
+							}
+							if (control) {
+								Helper.showMsg("success");
+								setVisible(false);
+
+							} else {
+								Helper.showMsg("invalid number");
+							}
 						} else {
 							boolean control = false;
 							try {
-								control = product.addProduct(textField_productName.getText(),
+								control = product.addStockProduct(textField_productName.getText(),
 										Integer.parseInt(textField_purchasePrice.getText()),
 										Integer.parseInt(textField_salePrice.getText()),
 										Integer.parseInt(textField_stock.getText()));
@@ -192,6 +224,8 @@ public class AddProductDialogGUI extends JDialog {
 							}
 
 						}
+							
+						
 
 					}
 				});
@@ -203,11 +237,15 @@ public class AddProductDialogGUI extends JDialog {
 				JButton cancelButton = new JButton("İptal");
 				cancelButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						setVisible(false);
+						
+						dispose();
+						 //setVisible(false);
 					}
 				});
 				buttonPane.add(cancelButton);
 			}
 		}
 	}
+
+	
 }
