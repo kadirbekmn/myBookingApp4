@@ -1,11 +1,15 @@
 package Model;
 
+import java.sql.Timestamp;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
 
 import Helper.DBConnection;
 import View.ProductManagementGUI;
@@ -18,16 +22,17 @@ public class Product {
 	Statement statement = null;
 	PreparedStatement preparedStatement = null;
 
-	private int id;
-	private String name;
-	private int purchasePrice;
-	private int salePrice;
-	private String type;
+	protected int id;
+	protected String name;
+	protected int purchasePrice;
+	protected int salePrice;
+	protected String type;
 	private float price;
 	private byte[] image;
-	private int stock;
+	protected int stock;
 	private boolean selected;
 	private int count;
+	
 
 	public Product() {
 		dbConnection = new DBConnection();
@@ -121,6 +126,8 @@ public class Product {
 	public void setPurchasePrice(int purchasePrice) {
 		this.purchasePrice = purchasePrice;
 	}
+	
+	
 
 	public ArrayList<Product> getProductsList() throws SQLException {
 		ArrayList<Product> productList = new ArrayList<>();
@@ -141,26 +148,69 @@ public class Product {
 
 		return productList;
 	}
-	
-	public ArrayList<Product> getSaledProductsList() throws SQLException {
-		ArrayList<Product> saledproductList = new ArrayList<>();
-		Product objectProduct = null;
-		try {
-			statement = connection.createStatement();
-			resultSet = statement.executeQuery("SELECT * FROM saledProduct");
-			while (resultSet.next()) {
-				objectProduct = new Product(resultSet.getInt("id"), resultSet.getString("name"),
-						resultSet.getInt("purchase_price"), resultSet.getInt("sale_price"), resultSet.getInt("stock"));
-				saledproductList.add(objectProduct);
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}  finally {
-			closeResources();
-		}
 
-		return saledproductList;
-	}
+	
+	
+	  public Product getProductById(int id) throws SQLException {
+	        String query = "SELECT * FROM product WHERE id = ?";
+	        
+	        try {
+				
+				preparedStatement = connection.prepareStatement(query);
+				preparedStatement.setInt(1, id);
+				resultSet = preparedStatement.executeQuery();
+			
+				if(resultSet.next()) {
+					String name = resultSet.getString("name");
+					int stock = resultSet.getInt("stock");
+					int salePrice = resultSet.getInt("sale_price");
+					int purchasePrice = resultSet.getInt("purchase_price");
+					return new Product (id, name, purchasePrice, salePrice,stock);
+				} else {
+					 throw new SQLException("Product with ID " + id + " not found.");
+				}
+				
+			} finally {
+				closeResources();
+			}
+	        
+	        
+	      /*  try (Connection conn = Database.getConnection();
+	             PreparedStatement stmt = conn.prepareStatement(query)) {
+	            stmt.setInt(1, id);
+	            try (ResultSet rs = stmt.executeQuery()) {
+	                if (rs.next()) {
+	                    String name = rs.getString("name");
+	                    int stock = rs.getInt("stock");
+	                    int purchasePrice = rs.getInt("purchase_price");
+	                    int salePrice = rs.getInt("sale_price");
+	                    return new Product(id, name, stock, purchasePrice, salePrice);
+	                } else {
+	                    throw new SQLException("Product with ID " + id + " not found.");
+	                }
+	            }
+	        }*/
+	    }
+	
+//	public ArrayList<Product> getSaledProductsList() throws SQLException {
+//		ArrayList<Product> saledproductList = new ArrayList<>();
+//		Product objectProduct = null;
+//		try {
+//			statement = connection.createStatement();
+//			resultSet = statement.executeQuery("SELECT * FROM saledProduct");
+//			while (resultSet.next()) {
+//				objectProduct = new Product(resultSet.getInt("id"), resultSet.getString("name"),
+//						resultSet.getInt("purchase_price"), resultSet.getInt("sale_price"), resultSet.getInt("stock"));
+//				saledproductList.add(objectProduct);
+//			}
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//		}  finally {
+//			closeResources();
+//		}
+//
+//		return saledproductList;
+//	}
 
 	public boolean addStockProduct(String productName, int purchasePrice, int salePrice, int stock) throws SQLException {
 		String queryString = "INSERT INTO product (name,purchase_price,sale_price,stock) VALUES (?,?,?,?)";
@@ -197,22 +247,23 @@ public class Product {
 		}
 	}
 	
-	public boolean addSaleProduct(int selectedProductNumber,String productName, int purchasePrice, int salePrice, int stock,Double premiumPercentage,Double premiumFee,Double profit,String sellingEmployeeName) throws SQLException {
-		String query = "INSERT INTO saledproduct (selected_product_number,product_name,purchase_price,sale_price,stock,premium_percentage,premium_fee,profit,selling_employee) VALUES (?,?,?,?,?,?,?,?,?)";
+	public boolean addSaleProduct(int selectedProductNumber,int productID, int purchasePrice, int salePrice, int stock,Double premiumPercentage,Double premiumFee,Double profit,int sellingEmployeeName) throws SQLException {
+		String query = "INSERT INTO saledproduct (selected_product_number,product,purchase_price,sale_price,stock,premium_percentage,premium_fee,profit,selling_employee,transaction_date) VALUES (?,?,?,?,?,?,?,?,?,?)";
 		boolean key = false;
 
 		try {
 			statement = connection.createStatement();
 			preparedStatement = connection.prepareStatement(query);
 			preparedStatement.setInt(1, selectedProductNumber);
-			preparedStatement.setString(2, productName);
+			preparedStatement.setInt(2, productID);
 			preparedStatement.setInt(3, purchasePrice);
 			preparedStatement.setInt(4, salePrice);
 			preparedStatement.setInt(5, stock);
 			preparedStatement.setDouble(6, premiumPercentage);
 			preparedStatement.setDouble(7, premiumFee);
 			preparedStatement.setDouble(8, profit);
-			preparedStatement.setString(9, sellingEmployeeName);
+			preparedStatement.setInt(9, sellingEmployeeName);
+			preparedStatement.setTimestamp(10, new Timestamp(new Date().getTime()));
 			preparedStatement.executeUpdate();
 			key = true;
 		} catch (Exception e) {
@@ -220,6 +271,26 @@ public class Product {
 		}
 		return key;
 	}
+	
+	public int getIdByName (String name) {
+		String query = "Select * FROM product WHERE name = ?";
+		int id=-1;
+		try {
+			statement = connection.createStatement();
+			preparedStatement = connection.prepareStatement(query);
+			preparedStatement.setString(1, name);
+			resultSet = preparedStatement.executeQuery();
+			while (resultSet.next()) {
+				
+				id = resultSet.getInt("id");
+			}
+			return id;
+		} catch (Exception e) {
+			// TODO: handle exception
+			return id;
+		}
+	}
+
 	
 	public boolean updateProduct(int id, String name, int purchasePrice, int salePrice, int stock) {
 		String query = "UPDATE product SET name = ?, purchase_price = ?, sale_price = ?, stock= ? WHERE id = ?";
@@ -255,7 +326,7 @@ public class Product {
 		}
 	}
 	
-	private void closeResources() {
+	protected void closeResources() {
 		try {
 			if (resultSet != null) {
 				resultSet.close();
@@ -270,4 +341,40 @@ public class Product {
 			e.printStackTrace();
 		}
 	}
+	
+
+	public void updateStockById(int id, int newStock) throws SQLException {
+        String query = "UPDATE products SET stock = ? WHERE id = ?";
+       preparedStatement  = connection.prepareStatement(query);
+    		   
+            preparedStatement.setInt(1, newStock);
+            preparedStatement.setInt(2, id);
+            int rowsUpdated = preparedStatement.executeUpdate();
+            if (rowsUpdated == 0) {
+                throw new SQLException("Product with ID " + id + " not found.");
+            }
+        
+    }
+	
+	public List<Product> searchProduct(String name) throws SQLException {
+        String query = "SELECT * FROM products WHERE name LIKE ?";
+        List<Product> products = new ArrayList<>();
+        preparedStatement = connection.prepareStatement(query);
+        preparedStatement = connection.prepareStatement(query);
+            		 {
+            preparedStatement.setString(1, "%" + name + "%");
+           resultSet = preparedStatement.executeQuery();
+        		   
+                while (resultSet.next()) {
+                    int id = resultSet.getInt("id");
+                    String productName = resultSet.getString("name");
+                    int stock = resultSet.getInt("stock");
+                    int purchasePrice = resultSet.getInt("purchase_price");
+                    int salePrice = resultSet.getInt("sale_price");
+                    products.add(new Product(id, productName, stock, purchasePrice, salePrice));
+                }
+            
+        }
+        return products;
+    }
 }

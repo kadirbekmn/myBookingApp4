@@ -71,6 +71,53 @@ public class Employee {
 			}
 		return list;
 	}
+	
+	 public String getNameByID(int id) {
+		 
+	        String query = "SELECT name FROM employee WHERE id = ?";
+	        String name="";
+	        try {
+	            preparedStatement = con.prepareStatement(query);
+	            preparedStatement.setInt(1, id);
+	            rs = preparedStatement.executeQuery();
+	            
+	            while (rs.next()) {
+					
+					name = rs.getString("name");
+				}
+				return name;
+	           
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	            return name;
+	        } finally {
+	            closeResources();
+	        }
+	    }
+	 
+	 public int getIDByName(String name) {
+		 
+	        String query = "SELECT id FROM employee WHERE name = ?";
+	        int id =0;
+	        try {
+	            preparedStatement = con.prepareStatement(query);
+	            preparedStatement.setString(1, name);
+	            rs = preparedStatement.executeQuery();
+	            
+	            while (rs.next()) {
+					
+					id = rs.getInt("id");
+				}
+				return id;
+	           
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	            return id;
+	        } finally {
+	            closeResources();
+	        }
+	    }
+
 
     public boolean addEmployee(String name, String type) {
         String query = "INSERT INTO employee (name, type) VALUES (?, ?)";

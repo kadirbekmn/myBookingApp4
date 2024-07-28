@@ -43,6 +43,14 @@ public class AddProductDialogGUI extends JDialog {
 		}
 	}
 	
+	public AddProductDialogGUI(int productId) {
+		this();
+        setTitle("Ürünü Düzenle");
+        selectedProductId = productId;
+        loadProductDetails(productId);
+    }
+
+	
 	public AddProductDialogGUI(int productId, String productName, int stock, int purchasePrice, int salePrice) {
 	    this(); // Call the default constructor for GUI initialization
 
@@ -53,6 +61,19 @@ public class AddProductDialogGUI extends JDialog {
 	    textField_purchasePrice.setText(String.valueOf(purchasePrice));
 	    textField_salePrice.setText(String.valueOf(salePrice));
 	  }
+	
+	   private void loadProductDetails(int productId) {
+	        try {
+	        	Product updateProduct= product.getProductById(productId);
+	          //  Product product = Product.getProductById(productId);
+	            textField_productName.setText(updateProduct.getName());
+	            textField_stock.setText(String.valueOf(updateProduct.getStock()));
+	            textField_purchasePrice.setText(String.valueOf(updateProduct.getPurchasePrice()));
+	            textField_salePrice.setText(String.valueOf(updateProduct.getSalePrice()));
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+	    }
 
 	public AddProductDialogGUI() {
 

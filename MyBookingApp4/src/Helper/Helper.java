@@ -60,6 +60,9 @@ public class Helper {
 		case "updateSure":
 			msg = "Ürünü güncellemek istediğinize emin misiniz?";
 			break;
+		case "cancel":
+			msg = "Yaptığınız işlemler iptal edilecektir. Emin misiniz?";
+			break;
 		}
 
 		int res = JOptionPane.showConfirmDialog(null, msg, "Dikkat !", JOptionPane.YES_NO_OPTION);
