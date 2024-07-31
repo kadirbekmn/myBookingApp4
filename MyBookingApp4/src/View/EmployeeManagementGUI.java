@@ -1,5 +1,6 @@
 package View;
 
+import java.awt.Dimension;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -11,31 +12,28 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 
-import Helper.DBConnection;
 import Helper.Helper;
 import Model.Employee;
 import Model.Operation;
 
 import javax.swing.JTabbedPane;
 import javax.swing.JLabel;
-import javax.swing.JList;
 
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JTextField;
-import javax.swing.ListSelectionModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.table.TableModel;
 import javax.swing.border.EtchedBorder;
 import javax.swing.SwingConstants;
-import javax.swing.JCheckBoxMenuItem;
+import javax.swing.ScrollPaneConstants;
 
 public class EmployeeManagementGUI extends JFrame {
 
@@ -49,7 +47,6 @@ public class EmployeeManagementGUI extends JFrame {
 	private DefaultTableModel employeeModel = null;
 	private JTextField fld_employeeId;
 	private JTextField fld_employeeToSearch;
-    private JCheckBoxMenuItem[] operationCheckBoxes;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -66,18 +63,20 @@ public class EmployeeManagementGUI extends JFrame {
 
 	public EmployeeManagementGUI() throws SQLException {
 		employeeModel = new DefaultTableModel();
-		Object[] colEmployeeName = new Object[3];
+		Object[] colEmployeeName = new Object[4];
 		colEmployeeName[0] = "Çalışan ID";
 		colEmployeeName[1] = "Çalışan Ad Soyad";
 		colEmployeeName[2] = "Çalışan Tip";
+		colEmployeeName[3] = "Çalışan İşlemler";
 		employeeModel.setColumnIdentifiers(colEmployeeName);
-		employeeData = new Object[3];
+		employeeData = new Object[4];
 		fld_employeeToSearch = new JTextField();
 		employee.getEmployeeList(fld_employeeToSearch.getText());
 		for (int i = 0; i < employee.list.size(); i++) {
 			employeeData[0] = employee.list.get(i).getId();
 			employeeData[1] = employee.list.get(i).getName();
 			employeeData[2] = employee.list.get(i).getType();
+			employeeData[3] = !employee.findChoosedOperationNames(employee.list.get(i).getId()).isEmpty() ? employee.findChoosedOperationNames(employee.list.get(i).getId()) : "Seçili İşlem Yok";
 			employeeModel.addRow(employeeData);
 		}
 
@@ -91,7 +90,7 @@ public class EmployeeManagementGUI extends JFrame {
 		contentPane.setLayout(null);
 
 		JTabbedPane w_tab = new JTabbedPane(JTabbedPane.TOP);
-		w_tab.setBounds(10, 213, 819, 396);
+		w_tab.setBounds(10, 117, 819, 492);
 		contentPane.add(w_tab);
 
 		JPanel panel = new JPanel();
@@ -99,7 +98,7 @@ public class EmployeeManagementGUI extends JFrame {
 		panel.setLayout(null);
 
 		JScrollPane w_scrollDoctor = new JScrollPane();
-		w_scrollDoctor.setBounds(10, 10, 635, 338);
+		w_scrollDoctor.setBounds(10, 10, 635, 445);
 		panel.add(w_scrollDoctor);
 
 		table_employee = new JTable(employeeModel);
@@ -107,7 +106,7 @@ public class EmployeeManagementGUI extends JFrame {
 
 		JPanel panel_1 = new JPanel();
 		panel_1.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
-		panel_1.setBounds(655, 10, 149, 261);
+		panel_1.setBounds(655, 10, 149, 321);
 		panel.add(panel_1);
 		panel_1.setLayout(null);
 
@@ -118,153 +117,35 @@ public class EmployeeManagementGUI extends JFrame {
 		lbl_employeeName_1_1_1.setFont(new Font("Yu Gothic UI Semibold", Font.BOLD, 15));
 
 		JLabel lbl_employeeName = new JLabel("Çalışan Adı:");
-		lbl_employeeName.setBounds(10, 38, 80, 14);
+		lbl_employeeName.setBounds(10, 34, 80, 14);
 		panel_1.add(lbl_employeeName);
 		lbl_employeeName.setFont(new Font("Yu Gothic UI Semibold", Font.PLAIN, 13));
 
 		fld_EmployeeName = new JTextField();
 		fld_EmployeeName.setToolTipText("Çalışan Adı Giriniz");
-		fld_EmployeeName.setBounds(10, 58, 129, 20);
+		fld_EmployeeName.setBounds(10, 54, 129, 20);
 		panel_1.add(fld_EmployeeName);
 		fld_EmployeeName.setColumns(10);
 
 		JLabel lbl_employeeType = new JLabel("Çalışan Tipi:");
-		lbl_employeeType.setBounds(10, 92, 80, 14);
+		lbl_employeeType.setBounds(10, 90, 80, 14);
 		panel_1.add(lbl_employeeType);
 		lbl_employeeType.setFont(new Font("Yu Gothic UI Semibold", Font.PLAIN, 13));
 
 		fld_EmployeeType = new JTextField();
 		fld_EmployeeType.setToolTipText("Çalışan İşlemleri Seçiniz");
-		fld_EmployeeType.setBounds(10, 116, 124, 20);
+		fld_EmployeeType.setBounds(10, 109, 124, 20);
 		panel_1.add(fld_EmployeeType);
 		fld_EmployeeType.setColumns(10);
-
-		JButton btn_addEmployee = new JButton("Ekle");
-		btn_addEmployee.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (fld_EmployeeName.getText().length() == 0 || fld_EmployeeType.getText().length() == 0) {
-					Helper.showMsg("fill");
-				} else {
-					if (Helper.confirm("sure")) {
-						boolean control = employee.addEmployee(fld_EmployeeName.getText(), fld_EmployeeType.getText());
-						if (control) {
-							Helper.showMsg("success");
-							fld_EmployeeName.setText(null);
-							fld_EmployeeType.setText(null);
-							try {
-								fld_employeeToSearch.setText(null);
-								updateEmployeeModel();
-							} catch (SQLException e1) {
-								e1.printStackTrace();
-							}
-						}
-					}
-				}
-			}
-		});
-
-		btn_addEmployee.setBounds(10, 146, 129, 21);
-		panel_1.add(btn_addEmployee);
-		btn_addEmployee.setActionCommand("OK");
-
-//		JCheckBoxMenuItem checkBoxMenu_operations = new JCheckBoxMenuItem("New check item");
-//		checkBoxMenu_operations.setBounds(10, 116, 125, 26);
-//		panel_1.add(checkBoxMenu_operations);
-	
-		/////
 		
-//		List<String> operationTypes = null;
-//		try {
-//		    Operation operation = new Operation();
-//		    operationTypes = operation.getOperationTypes();
-//		} catch (SQLException e) {
-//		    e.printStackTrace();
-//		}
-//
-//		JCheckBoxMenuItem[] checkBoxMenu_operations = new JCheckBoxMenuItem[operationTypes.size()];
-//		for (int i = 0; i < operationTypes.size(); i++) {
-//		    checkBoxMenu_operations[i] = new JCheckBoxMenuItem(operationTypes.get(i));
-//		    checkBoxMenu_operations[i].setBounds(10, 116 + (i * 30), 125, 26); // Her bir öğenin konumunu ayarla
-//		    panel_1.add(checkBoxMenu_operations[i]); // Panel'e ekle
-//		}
+		JPanel checkBoxPanel = new JPanel();
+		checkBoxPanel.setLayout(null);
 
-		/////
-		
-//		List<String> operationTypes = null;
-//		try {
-//		    Operation operation = new Operation();
-//		    operationTypes = operation.getOperationTypes();
-//		} catch (SQLException e) {
-//		    e.printStackTrace();
-//		}
-//
-//		JList<String> operationList = new JList<>(operationTypes.toArray(new String[0]));
-//		operationList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-//		JScrollPane scrollPane = new JScrollPane(operationList);
-//		scrollPane.setBounds(10, 116, 200, 200); // Scroll pane boyutu ve konumu
-//		panel_1.add(scrollPane); // Panel'e ekle
-
-		//////
-		
-//		JButton operationButton = new JButton("İşlem Seç");
-//		operationButton.setBounds(10, 116, 200, 26);
-//		panel_1.add(operationButton);
-//		
-//		List<String> operationTypes = null;
-//		try {
-//		    Operation operation = new Operation();
-//		    operationTypes = operation.getOperationTypes();
-//		} catch (SQLException e) {
-//		    e.printStackTrace();
-//		}
-//
-//		JList<String> operationList = new JList<>(operationTypes.toArray(new String[0]));
-//		operationList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-//		JScrollPane scrollPane = new JScrollPane(operationList);
-//		scrollPane.setBounds(10, 146, 200, 150);
-//		scrollPane.setVisible(false);
-//		panel_1.add(scrollPane);
-//
-//		operationButton.addActionListener(new ActionListener() {
-//		    public void actionPerformed(ActionEvent e) {
-//		        if (scrollPane.isVisible()) {
-//		            scrollPane.setVisible(false);
-//		        } else {
-//		            scrollPane.setVisible(true);
-//		        }
-//		    }
-//		});
-
-		//////
-
-//		List<String> operationTypes = null;
-//		try {
-//		    Operation operation = new Operation();
-//		    operationTypes = operation.getOperationTypes();
-//		} catch (SQLException e) {
-//		    e.printStackTrace();
-//		}
-//
-//		JCheckBox[] checkBoxes = new JCheckBox[operationTypes.size()];
-//		for (int i = 0; i < operationTypes.size(); i++) {
-//		    checkBoxes[i] = new JCheckBox(operationTypes.get(i));
-//		    checkBoxes[i].setBounds(10, 116 + (i * 30), 200, 26);
-//		    panel_1.add(checkBoxes[i]);
-//		}
-//
-//		JButton operationButton = new JButton("İşlem Seç");
-//		operationButton.setBounds(10, 116, 200, 26);
-//		panel_1.add(operationButton);
-//
-//		operationButton.addActionListener(new ActionListener() {
-//		    public void actionPerformed(ActionEvent e) {
-//		        for (JCheckBox checkBox : checkBoxes) {
-//		            checkBox.setVisible(!checkBox.isVisible());
-//		        }
-//		    }
-//		});
-		
-		///////
+		JScrollPane scrollPane_1 = new JScrollPane(checkBoxPanel);
+		scrollPane_1.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		scrollPane_1.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		scrollPane_1.setBounds(10, 168, 124, 112);
+		panel_1.add(scrollPane_1);
 
 		List<String> operationTypes = null;
 		try {
@@ -277,35 +158,69 @@ public class EmployeeManagementGUI extends JFrame {
 		JCheckBox[] checkBoxes = new JCheckBox[operationTypes.size()];
 		for (int i = 0; i < operationTypes.size(); i++) {
 		    checkBoxes[i] = new JCheckBox(operationTypes.get(i));
-		    checkBoxes[i].setBounds(10, 116 + (i * 30), 200, 26);
-		    panel_1.add(checkBoxes[i]);
+		    checkBoxes[i].setBounds(10, 30 * i, 200, 26);
+		    checkBoxPanel.add(checkBoxes[i]);
 		}
 
-		JButton operationButton = new JButton("İşlem Seç");
-		operationButton.setBounds(10, 211, 129, 26);
-		panel_1.add(operationButton);
-		
-		JList list = new JList();
-		list.setBounds(10, 237, 129, 14);
-		panel_1.add(list);
+		int panelWidth = 140;
+		int panelHeight = operationTypes.size() * 30;
+		checkBoxPanel.setPreferredSize(new Dimension(panelWidth, panelHeight));
 
-		operationButton.addActionListener(new ActionListener() {
-		    public void actionPerformed(ActionEvent e) {
-		        for (JCheckBox checkBox : checkBoxes) {
-		            checkBox.setVisible(!checkBox.isVisible());
-		        }
-		    }
-		});
-		
-		
-		
-		
+		JLabel lbl_employeeOperation = new JLabel("Çalışan İşlemleri:");
+		lbl_employeeOperation.setFont(new Font("Yu Gothic UI Semibold", Font.PLAIN, 13));
+		lbl_employeeOperation.setBounds(10, 144, 124, 14);
+		panel_1.add(lbl_employeeOperation);
 
 		JPanel panel_2 = new JPanel();
 		panel_2.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
-		panel_2.setBounds(655, 281, 149, 114);
+		panel_2.setBounds(655, 341, 149, 114);
 		panel.add(panel_2);
 		panel_2.setLayout(null);
+
+		JButton btn_addEmployee = new JButton("Ekle");
+		btn_addEmployee.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		        if (fld_EmployeeName.getText().length() == 0 || fld_EmployeeType.getText().length() == 0) {
+		            Helper.showMsg("fill");
+		        } else {
+		            if (Helper.confirm("sure")) {
+		            	Employee tempEmployee = new Employee();
+		            	tempEmployee.setName(fld_EmployeeName.getText());
+		            	tempEmployee.setType(fld_EmployeeType.getText());
+		                boolean control = employee.addEmployee(tempEmployee);
+		                if (control) {
+		                    List<Operation> selectedOperations = new ArrayList<>();
+		                    for (JCheckBox checkBox : checkBoxes) {
+		                        if (checkBox.isSelected()) {
+		                        	
+		                        	
+		                            selectedOperations.add(employee.findOperationByName(checkBox.getText()));
+		                            
+		                            
+		                        }
+		                    }
+		                    employee.addOperations(selectedOperations, tempEmployee);
+		                    Helper.showMsg("success");
+		                    fld_EmployeeName.setText(null);
+		                    fld_EmployeeType.setText(null);
+		                    try {
+		                        fld_employeeToSearch.setText(null);
+		                        updateEmployeeModel();
+		                    } catch (SQLException e1) {
+		                        e1.printStackTrace();
+		                    }
+		                }
+		            }
+		        }
+		    }
+		});
+		btn_addEmployee.setBounds(10, 60, 100, 30);
+		panel_2.add(btn_addEmployee);
+
+
+		btn_addEmployee.setBounds(10, 290, 129, 21);
+		panel_1.add(btn_addEmployee);
+		btn_addEmployee.setActionCommand("OK");
 
 		JLabel lbl_employeeName_1_1 = new JLabel("Çalışan Sil");
 		lbl_employeeName_1_1.setHorizontalAlignment(SwingConstants.CENTER);
@@ -404,13 +319,13 @@ public class EmployeeManagementGUI extends JFrame {
 		fld_employeeToSearch = new JTextField();
 		fld_employeeToSearch.setToolTipText("Çalışan Adı Giriniz");
 		fld_employeeToSearch.setColumns(10);
-		fld_employeeToSearch.setBounds(103, 183, 129, 20);
+		fld_employeeToSearch.setBounds(102, 87, 129, 20);
 		contentPane.add(fld_employeeToSearch);
 
 		JLabel lbl_employeeName_1_1_1_1 = new JLabel("Çalışan Ara:");
 		lbl_employeeName_1_1_1_1.setHorizontalAlignment(SwingConstants.CENTER);
 		lbl_employeeName_1_1_1_1.setFont(new Font("Yu Gothic UI Semibold", Font.BOLD, 15));
-		lbl_employeeName_1_1_1_1.setBounds(-11, 179, 124, 24);
+		lbl_employeeName_1_1_1_1.setBounds(-12, 83, 124, 24);
 		contentPane.add(lbl_employeeName_1_1_1_1);
 
 		JButton btn_searchEmployee = new JButton("Ara");
@@ -425,7 +340,7 @@ public class EmployeeManagementGUI extends JFrame {
 			}
 		});
 		btn_searchEmployee.setActionCommand("OK");
-		btn_searchEmployee.setBounds(242, 182, 58, 21);
+		btn_searchEmployee.setBounds(241, 86, 58, 21);
 		contentPane.add(btn_searchEmployee);
 	}
 
@@ -437,6 +352,7 @@ public class EmployeeManagementGUI extends JFrame {
 			employeeData[0] = employee.list.get(i).getId();
 			employeeData[1] = employee.list.get(i).getName();
 			employeeData[2] = employee.list.get(i).getType();
+			employeeData[3] = !employee.findChoosedOperationNames(employee.list.get(i).getId()).isEmpty() ? employee.findChoosedOperationNames(employee.list.get(i).getId()) : "Seçili İşlem Yok";
 			employeeModel.addRow(employeeData);
 		}
 	}

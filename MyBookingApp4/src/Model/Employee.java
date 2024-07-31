@@ -119,21 +119,31 @@ public class Employee {
 	    }
 
 
-    public boolean addEmployee(String name, String type) {
-        String query = "INSERT INTO employee (name, type) VALUES (?, ?)";
-        try {
-            preparedStatement = con.prepareStatement(query);
-            preparedStatement.setString(1, name);
-            preparedStatement.setString(2, type);
-            preparedStatement.executeUpdate();
-            return true;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        } finally {
-            closeResources();
-        }
-    }
+	 public boolean addEmployee(Employee tempEmployee) {
+		    String query = "INSERT INTO employee (name, type) VALUES (?, ?)";
+		    try {
+		        preparedStatement = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+		        preparedStatement.setString(1, tempEmployee.getName());
+		        preparedStatement.setString(2, tempEmployee.getType());
+		        int affectedRows = preparedStatement.executeUpdate();
+
+		        if (affectedRows > 0) {
+		            ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
+		            if (generatedKeys.next()) {
+		                tempEmployee.setId(generatedKeys.getInt(1)); // Yeni oluşturulan ID'yi tempEmployee nesnesine ayarla
+		            }
+		            return true;
+		        } else {
+		            return false;
+		        }
+		    } catch (SQLException e) {
+		        e.printStackTrace();
+		        return false;
+		    } finally {
+		        closeResources();
+		    }
+		}
+
 
     public boolean deleteEmployee(int id) {
         String query = "DELETE FROM employee WHERE id = ?";
@@ -165,6 +175,130 @@ public class Employee {
         } finally {
             closeResources();
         }
+    }
+    
+    public List<Operation> findChoosedOperations(int employeeId) {
+        String query = "SELECT operation_fk FROM operations_by_employee WHERE employee_fk = ?";
+        List<Operation> operations = new ArrayList<>();
+        
+        try {
+            preparedStatement = con.prepareStatement(query);
+            preparedStatement.setInt(1, employeeId);
+            rs = preparedStatement.executeQuery();
+            
+            while (rs.next()) {
+                int operationId = rs.getInt("operation_fk");
+                Operation operation = getOperationById(operationId);
+                if (operation != null) {
+                    operations.add(operation);
+                }
+            }
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            closeResources();
+        }
+        
+        return operations;
+    }
+    
+    public String findChoosedOperationNames(int employeeId) {
+        String query = "SELECT o.operationName FROM operations_by_employee obe " +
+                       "JOIN operation o ON obe.operation_fk = o.id " +
+                       "WHERE obe.employee_fk = ?";
+        StringBuilder operationNames = new StringBuilder();
+
+        try {
+            preparedStatement = con.prepareStatement(query);
+            preparedStatement.setInt(1, employeeId);
+            rs = preparedStatement.executeQuery();
+
+            boolean first = true;
+            while (rs.next()) {
+                if (!first) {
+                    operationNames.append(", ");
+                }
+                operationNames.append(rs.getString("operationName"));
+                first = false;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            closeResources();
+        }
+
+        return operationNames.toString();
+    }
+
+
+
+    private Operation getOperationById(int operationId) {
+        String query = "SELECT * FROM operation WHERE id = ?";
+        Operation operation = null;
+        
+        try {
+            preparedStatement = con.prepareStatement(query);
+            preparedStatement.setInt(1, operationId);
+            rs = preparedStatement.executeQuery();
+            
+            if (rs.next()) {
+                operation = new Operation();
+                operation.setId(rs.getInt("id"));
+                operation.setOperationName(rs.getString("operationName"));
+            }
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
+        return operation;
+    }
+    
+    public boolean addOperations(List<Operation> operations, Employee employee) {
+        boolean hasAdded = false;
+        String query = "INSERT INTO operations_by_employee (employee_fk, operation_fk) VALUES (?, ?)";
+        
+        try {
+            preparedStatement = con.prepareStatement(query);
+            
+            for (Operation operation : operations) {
+                preparedStatement.setInt(1, employee.getId());
+                preparedStatement.setInt(2, operation.getId());
+                preparedStatement.executeUpdate();
+            }
+            
+            hasAdded = true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            closeResources();
+        }
+        return hasAdded;
+    }
+    
+    public Operation findOperationByName(String operationName) {
+        String query = "SELECT * FROM operation WHERE operationName = ?";
+        Operation foundOperation = null;
+        
+        try {
+            preparedStatement = con.prepareStatement(query);
+            preparedStatement.setString(1, operationName);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            
+            if (resultSet.next()) {
+                int id = resultSet.getInt("id");
+                String name = resultSet.getString("operationName");
+                int time = resultSet.getInt("operationTime");
+                int price = resultSet.getInt("operationPrice");
+                foundOperation = new Operation(id, name, time, price);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            closeResources();
+        }
+        return foundOperation;
     }
 
     private void closeResources() {

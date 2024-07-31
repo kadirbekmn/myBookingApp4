@@ -26,16 +26,16 @@ public class Customer {
 	private Date customerBirth;
 	private int customerPhone;
 	private String customerExplanation;
-	private int customerBirhDiscount;
+	private int customerBirthDiscount;
 
 
-	public Customer(int id, String customerName, Date customerBirth, int customerPhone, String customerExplanation, int customerBirhDiscount) {
+	public Customer(int id, String customerName, Date customerBirth, int customerPhone, String customerExplanation, int customerDiscount) {
 		this.id = id;
 		this.customerName = customerName;
 		this.customerBirth = customerBirth;
 		this.customerPhone = customerPhone;
 		this.customerExplanation = customerExplanation;
-		this.customerPhone = customerBirhDiscount;
+		this.customerBirthDiscount = customerDiscount;
 	}
 
 	public Customer() {
@@ -83,12 +83,12 @@ public class Customer {
 		this.customerExplanation = customerExplanation;
 	}
 
-	public int getCustomerBirhDiscount() {
-		return customerBirhDiscount;
+	public int getCustomerBirthDiscount() {
+		return customerBirthDiscount;
 	}
 
-	public void setCustomerBirhDiscount(int customerBirhDiscount) {
-		this.customerBirhDiscount = customerBirhDiscount;
+	public void setCustomerbirthDiscount(int customerbirthDiscount) {
+		this.customerBirthDiscount = customerbirthDiscount;
 	}
 
 	public List<Customer> getCustomerList(String searchKeyword) throws SQLException {
@@ -98,7 +98,7 @@ public class Customer {
 			rs = st.executeQuery("SELECT * FROM customer WHERE customerName LIKE '" + searchKeyword + "%'");
 			while (rs.next()) {
 				Customer customer = new Customer(rs.getInt("id"), rs.getString("customerName"), rs.getDate("customerBirth"),
-						rs.getInt("customerPhone"), rs.getString("customerExplanation"), rs.getInt("customerBirhDiscount"));
+						rs.getInt("customerPhone"), rs.getString("customerExplanation"), rs.getInt("customerbirthDiscount"));
 				list.add(customer);
 			}
 		} finally {
@@ -107,15 +107,15 @@ public class Customer {
 		return list;
 	}
 
-	public boolean addCustomer(String customerName, Date customerBirth, int customerPhone, String customerExplanation, int customerBirhDiscount) {
-		String query = "INSERT INTO customer (customerName, customerBirth, customerPhone, customerExplanation, customerBirhDiscount) VALUES (?, ?, ?, ?, ?)";
+	public boolean addCustomer(String customerName, Date customerBirth, int customerPhone, String customerExplanation, int customerBirthDiscount) {
+		String query = "INSERT INTO customer (customerName, customerBirth, customerPhone, customerExplanation, customerbirthDiscount) VALUES (?, ?, ?, ?, ?)";
 		try {
 			preparedStatement = con.prepareStatement(query);
 			preparedStatement.setString(1, customerName);
 			preparedStatement.setDate(2, customerBirth);
 			preparedStatement.setInt(3, customerPhone);
 			preparedStatement.setString(4, customerExplanation);
-			preparedStatement.setInt(5, customerBirhDiscount);
+			preparedStatement.setInt(5, customerBirthDiscount);
 			preparedStatement.executeUpdate();
 			return true;
 		} catch (SQLException e) {
@@ -141,15 +141,15 @@ public class Customer {
 		}
 	}
 
-	public boolean updateCustomer(int id, String customerName, Date customerBirth, int customerPhone, String customerExplanation, int customerBirhDiscount) {
-		String query = "UPDATE customer SET customerName = ?, customerBirth = ?, customerPhone = ?, customerExplanation = ?, customerBirhDiscount = ? WHERE id = ?";
+	public boolean updateCustomer(int id, String customerName, Date customerBirth, int customerPhone, String customerExplanation, int customerBirthDiscount) {
+		String query = "UPDATE customer SET customerName = ?, customerBirth = ?, customerPhone = ?, customerExplanation = ?, customerbirthDiscount = ? WHERE id = ?";
 		try {
 			preparedStatement = con.prepareStatement(query);
 			preparedStatement.setString(1, customerName);
 			preparedStatement.setDate(2, customerBirth);
 			preparedStatement.setInt(3, customerPhone);
 			preparedStatement.setString(4, customerExplanation);
-			preparedStatement.setInt(5, customerBirhDiscount);
+			preparedStatement.setInt(5, customerBirthDiscount);
 			preparedStatement.executeUpdate();
 			return true;
 		} catch (SQLException e) {

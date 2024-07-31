@@ -25,7 +25,7 @@ public class Manager{
 	}
 	
 	public Manager() {}
-	
+
 	
 	public int getId() {
 		return id;
