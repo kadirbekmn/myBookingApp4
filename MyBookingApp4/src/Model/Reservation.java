@@ -5,11 +5,19 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class Reservation {
+	DBConnection dbConnection = null;
+	Connection connection = null;
+	ResultSet resultSet = null;
+	Statement statement = null;
+	PreparedStatement preparedStatement = null;
+	
 	private Connection con;
 	private int id;
 	private int customerId;
@@ -155,6 +163,8 @@ public class Reservation {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			isSaved = false;
+		} finally {
+			closeResources();
 		}
 		return isSaved;
 	}
@@ -183,6 +193,8 @@ public class Reservation {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
+		} finally {
+			closeResources();
 		}
 		return reservations;
 	}
@@ -213,6 +225,8 @@ public class Reservation {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
+		} finally {
+			closeResources();
 		}
 		return list;
 	}
@@ -226,6 +240,8 @@ public class Reservation {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return false;
+		} finally {
+			closeResources();
 		}
 	}
 
@@ -245,7 +261,128 @@ public class Reservation {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
+		} finally {
+			closeResources();
 		}
 		return false;
 	}
+	
+	public int getTodayReservationCount() throws SQLException {
+	    String query = "SELECT COUNT(*) FROM reservation WHERE date >= ? AND date < ?";
+	    
+	    Calendar now = Calendar.getInstance();
+	    Timestamp startOfDay = new Timestamp(now.getTimeInMillis());
+
+	    now.set(Calendar.HOUR_OF_DAY, 23);
+	    now.set(Calendar.MINUTE, 59);
+	    now.set(Calendar.SECOND, 59);
+	    now.set(Calendar.MILLISECOND, 999);
+	    Timestamp endOfDay = new Timestamp(now.getTimeInMillis());
+
+	    try (PreparedStatement preparedStatement = con.prepareStatement(query)) {
+	        preparedStatement.setTimestamp(1, startOfDay);
+	        preparedStatement.setTimestamp(2, endOfDay);
+
+	        try (ResultSet rs = preparedStatement.executeQuery()) {
+	            if (rs.next()) {
+	                return rs.getInt(1);
+	            }
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+		} finally {
+			closeResources();
+		}
+	    return 0;
+	}
+	
+	public int getCurrentMonthReservationCount() throws SQLException {
+	    String query = "SELECT COUNT(DISTINCT customer_id) FROM reservation WHERE date >= ? AND date < ?";
+	    Calendar now = Calendar.getInstance();
+	    Timestamp currentTime = new Timestamp(now.getTimeInMillis());
+
+	    now.set(Calendar.DAY_OF_MONTH, 1);
+	    now.set(Calendar.HOUR_OF_DAY, 0);
+	    now.set(Calendar.MINUTE, 0);
+	    now.set(Calendar.SECOND, 0);
+	    now.set(Calendar.MILLISECOND, 0);
+	    Timestamp startOfMonth = new Timestamp(now.getTimeInMillis());
+
+	    try (PreparedStatement preparedStatement = con.prepareStatement(query)) {
+	        preparedStatement.setTimestamp(1, startOfMonth);
+	        preparedStatement.setTimestamp(2, currentTime);
+
+	        try (ResultSet rs = preparedStatement.executeQuery()) {
+	            if (rs.next()) {
+	                return rs.getInt(1);
+	            }
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+		} finally {
+			closeResources();
+		}
+	    return 0;
+	}
+	
+	public int getTotalCustomerCount() throws SQLException {
+	    String query = "SELECT COUNT(DISTINCT group_id) FROM reservation";
+
+	    try (PreparedStatement preparedStatement = con.prepareStatement(query);
+	         ResultSet resultSet = preparedStatement.executeQuery()) {
+	        if (resultSet.next()) {
+	            return resultSet.getInt(1);
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    } finally {
+	        closeResources();
+	    }
+	    return 0;
+	}
+
+
+	public double getTotalRevenueFromReservations() throws SQLException {
+	    String query = "SELECT SUM(o.operationPrice) " +
+	                   "FROM reservation r " +
+	                   "JOIN operation o ON r.operation_id = o.id " +
+	                   "WHERE r.date <= NOW()";
+
+	    try (PreparedStatement preparedStatement = con.prepareStatement(query);
+	         ResultSet resultSet = preparedStatement.executeQuery()) {
+	        if (resultSet.next()) {
+	            return resultSet.getDouble(1);
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+		} finally {
+			closeResources();
+		}
+	    return 0.0;
+	}
+	
+	protected void closeResources() {
+	    try {
+	        if (resultSet != null) {
+	            resultSet.close();
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    try {
+	        if (statement != null) {
+	            statement.close();
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    try {
+	        if (preparedStatement != null) {
+	            preparedStatement.close();
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	}
+
 }
