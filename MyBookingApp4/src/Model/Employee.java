@@ -250,8 +250,9 @@ public class Employee {
             
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            closeResources();
         }
-        
         return operation;
     }
     
@@ -299,6 +300,10 @@ public class Employee {
             closeResources();
         }
         return foundOperation;
+    }
+    
+    public String toString() {
+        return this.name;
     }
 
     private void closeResources() {

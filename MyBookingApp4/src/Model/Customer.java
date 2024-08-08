@@ -6,7 +6,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -160,20 +159,10 @@ public class Customer {
 		}
 	}
 	
-//    public List<String> getOperationTypes() throws SQLException {
-//        List<String> operationTypes = new ArrayList<>();
-//        try {
-//            st = con.createStatement();
-//            rs = st.executeQuery("SELECT DISTINCT operationName FROM operation");
-//            while (rs.next()) {
-//                operationTypes.add(rs.getString("operationName"));
-//            }
-//        } finally {
-//            closeResources();
-//        }
-//        return operationTypes;
-//    }
-
+    public String toString() {
+        return this.customerName;
+    }
+    
 	private void closeResources() {
 		try {
 			if (rs != null) {

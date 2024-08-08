@@ -234,18 +234,14 @@ public class CustomerManagementGUI extends JFrame {
         lbl_welcome.setBounds(10, 11, 246, 14);
         w_pane.add(lbl_welcome);
 
-        JButton btnLogOut = new JButton("Çıkış Yap");
-        btnLogOut.setBounds(720, 9, 89, 23);
-        w_pane.add(btnLogOut);
-
-        JLabel lbl_customerToSearch = new JLabel("Aramak İstediğiniz Müşteri:");
+        JLabel lbl_customerToSearch = new JLabel("Müşteri Ara:");
         lbl_customerToSearch.setHorizontalAlignment(SwingConstants.LEFT);
         lbl_customerToSearch.setFont(new Font("Yu Gothic UI Semibold", Font.PLAIN, 13));
-        lbl_customerToSearch.setBounds(289, 7, 159, 14);
+        lbl_customerToSearch.setBounds(10, 38, 159, 14);
         w_pane.add(lbl_customerToSearch);
 
         fld_customerToSearch.setColumns(10);
-        fld_customerToSearch.setBounds(289, 27, 232, 20);
+        fld_customerToSearch.setBounds(91, 37, 118, 20);
         w_pane.add(fld_customerToSearch);
 
         JButton btn_customerSearch = new JButton("Ara");
@@ -273,8 +269,20 @@ public class CustomerManagementGUI extends JFrame {
             }
         });
 
-        btn_customerSearch.setBounds(531, 26, 89, 23);
+        btn_customerSearch.setBounds(219, 35, 89, 23);
         w_pane.add(btn_customerSearch);
+        
+        JButton btnLogOut = new JButton("Menüye Geri Dön");
+        btnLogOut.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				MenuGUI menuGUI = new MenuGUI();
+				menuGUI.setVisible(true);
+				dispose();
+			}
+		});
+        btnLogOut.setFont(new Font("Tahoma", Font.PLAIN, 15));
+        btnLogOut.setBounds(628, 9, 181, 27);
+        w_pane.add(btnLogOut);
 
         table_customer.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override

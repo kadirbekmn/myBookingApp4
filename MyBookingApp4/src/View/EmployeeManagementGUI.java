@@ -214,10 +214,6 @@ public class EmployeeManagementGUI extends JFrame {
 		        }
 		    }
 		});
-		btn_addEmployee.setBounds(10, 60, 100, 30);
-		panel_2.add(btn_addEmployee);
-
-
 		btn_addEmployee.setBounds(10, 290, 129, 21);
 		panel_1.add(btn_addEmployee);
 		btn_addEmployee.setActionCommand("OK");

@@ -70,15 +70,27 @@ public class MenuGUI extends JFrame {
 		panelMainComponents.add(panel_menuItems);
 		panel_menuItems.setLayout(null);
 
-		JMenuItem menu_rezervation = new JMenuItem("Rezervasyon Yönetimi");
-		menu_rezervation.setBackground(Color.WHITE);
-		menu_rezervation.setHorizontalTextPosition(SwingConstants.CENTER);
-		menu_rezervation.setHorizontalAlignment(SwingConstants.CENTER);
-		menu_rezervation.setFont(new Font("Yu Gothic Medium", Font.BOLD, 25));
-		menu_rezervation.setBorderPainted(true);
-		menu_rezervation.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
-		menu_rezervation.setBounds(30, 10, 328, 77);
-		panel_menuItems.add(menu_rezervation);
+		JMenuItem menu_reservation = new JMenuItem("Rezervasyon Yönetimi");
+		menu_reservation.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					ReservationManagementGUI reservationManagement = new ReservationManagementGUI();
+					reservationManagement.setVisible(true);
+					dispose();
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
+
+			}
+		});
+		menu_reservation.setBackground(Color.WHITE);
+		menu_reservation.setHorizontalTextPosition(SwingConstants.CENTER);
+		menu_reservation.setHorizontalAlignment(SwingConstants.CENTER);
+		menu_reservation.setFont(new Font("Yu Gothic Medium", Font.BOLD, 25));
+		menu_reservation.setBorderPainted(true);
+		menu_reservation.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+		menu_reservation.setBounds(30, 10, 328, 77);
+		panel_menuItems.add(menu_reservation);
 
 		JButton menu_product = new JButton("Ürün Yönetimi");
 		menu_product.addActionListener(new ActionListener() {
