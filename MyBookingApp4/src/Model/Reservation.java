@@ -326,12 +326,16 @@ public class Reservation {
 	}
 	
 	public int getTotalCustomerCount() throws SQLException {
-	    String query = "SELECT COUNT(DISTINCT group_id) FROM reservation";
+	    String query = "SELECT COUNT(DISTINCT group_id) FROM reservation WHERE date < ?";
 
-	    try (PreparedStatement preparedStatement = con.prepareStatement(query);
-	         ResultSet resultSet = preparedStatement.executeQuery()) {
-	        if (resultSet.next()) {
-	            return resultSet.getInt(1);
+	    try (PreparedStatement preparedStatement = con.prepareStatement(query)) {
+	        Timestamp currentTime = new Timestamp(System.currentTimeMillis());
+	        preparedStatement.setTimestamp(1, currentTime);
+
+	        try (ResultSet resultSet = preparedStatement.executeQuery()) {
+	            if (resultSet.next()) {
+	                return resultSet.getInt(1);
+	            }
 	        }
 	    } catch (SQLException e) {
 	        e.printStackTrace();
@@ -340,7 +344,6 @@ public class Reservation {
 	    }
 	    return 0;
 	}
-
 
 	public double getTotalRevenueFromReservations() throws SQLException {
 	    String query = "SELECT SUM(o.operationPrice) " +

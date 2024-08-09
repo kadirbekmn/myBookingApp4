@@ -222,7 +222,7 @@ public class MenuGUI extends JFrame {
 			productInfoPanel.add(productPanelTitle);
 
 			JLabel lbl_monthsIncomeForProduct = new JLabel(
-					"Bu ay elde edilen toplam kar : " + product.getThisMonthTotalProfit());
+					"Bu ay elde edilen toplam kar : " + product.getThisMonthTotalProfit() + " TL");
 			lbl_monthsIncomeForProduct.setOpaque(true);
 			lbl_monthsIncomeForProduct.setHorizontalAlignment(SwingConstants.LEFT);
 			lbl_monthsIncomeForProduct.setFont(new Font("Yu Gothic Medium", Font.BOLD, 17));
@@ -275,7 +275,7 @@ public class MenuGUI extends JFrame {
 			reservationInfoPanel.add(lbl_monthsIncome);
 
 			JLabel lbl_todaysIncome = new JLabel();
-			lbl_todaysIncome.setText("Bugün elde edilen gelir : " + reservation.getTotalRevenueFromReservations());
+			lbl_todaysIncome.setText("Bugün elde edilen gelir : " + reservation.getTotalRevenueFromReservations() + " TL");
 			lbl_todaysIncome.setOpaque(true);
 			lbl_todaysIncome.setHorizontalAlignment(SwingConstants.LEFT);
 			lbl_todaysIncome.setFont(new Font("Yu Gothic Medium", Font.BOLD, 17));
