@@ -114,7 +114,7 @@ top_panel.add(lbl_welcome, BorderLayout.WEST);
 
 btn_exit = new JButton("Menüye Geri Dön");
 btn_exit.addActionListener(e -> {
-MenuGUI menuGUI = new MenuGUI();
+MenuGUI menuGUI = new MenuGUI(manager);
 menuGUI.setVisible(true);
 dispose();
 });
@@ -541,6 +541,7 @@ btn_delete = new JButton();
 btn_delete.setIcon(new ImageIcon(new ImageIcon(getClass().getResource("delete.png")).getImage()));
 
 btn_plus.addActionListener(e -> {
+	
 selectedSaleProduct = 1; // İşleme başlamadan önce sıfırlanır
 if (selectedProductStock > 0) {
 selectedProductStock--; // Stoktan bir adet eksilt

@@ -13,6 +13,7 @@ import javax.swing.table.DefaultTableModel;
 
 import Helper.Helper;
 import Model.Customer;
+import Model.Manager;
 
 import javax.swing.JTabbedPane;
 import javax.swing.JLabel;
@@ -46,12 +47,13 @@ public class CustomerManagementGUI extends JFrame {
 	private JTextField fld_customerExplanation;
 	private JTextField fld_customerPhone;
 	private JCheckBox chckbx_birthDiscount;
+	private static Manager manager = new Manager();
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					CustomerManagementGUI frame = new CustomerManagementGUI();
+					CustomerManagementGUI frame = new CustomerManagementGUI(manager);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -60,7 +62,7 @@ public class CustomerManagementGUI extends JFrame {
 		});
 	}
 
-	public CustomerManagementGUI() throws SQLException {
+	public CustomerManagementGUI(Manager manager) throws SQLException {
 		customerModel = new DefaultTableModel();
 		Object[] colCustomerName = new Object[6];
 		colCustomerName[0] = "Müşteri ID";
@@ -304,7 +306,7 @@ public class CustomerManagementGUI extends JFrame {
 		JButton btn_exit = new JButton("Menüye Geri Dön");
 		btn_exit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				MenuGUI menuGUI = new MenuGUI();
+				MenuGUI menuGUI = new MenuGUI(manager);
 				menuGUI.setVisible(true);
 				dispose();
 			}

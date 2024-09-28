@@ -14,6 +14,7 @@ import javax.swing.table.DefaultTableModel;
 import Helper.DBConnection;
 import Helper.Helper;
 import Model.Employee;
+import Model.Manager;
 import Model.Operation;
 
 import javax.swing.JTabbedPane;
@@ -48,6 +49,7 @@ public class EmployeeManagementGUI extends JFrame {
 	private Object[] employeeData = null;
 	private DefaultTableModel employeeModel = null;
 	private JTextField fld_employeeId;
+	private static Manager manager = new Manager();
 	private JTextField fld_employeeToSearch;
     private JCheckBoxMenuItem[] operationCheckBoxes;
 
@@ -55,7 +57,7 @@ public class EmployeeManagementGUI extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					EmployeeManagementGUI frame = new EmployeeManagementGUI();
+					EmployeeManagementGUI frame = new EmployeeManagementGUI(manager);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -64,7 +66,7 @@ public class EmployeeManagementGUI extends JFrame {
 		});
 	}
 
-	public EmployeeManagementGUI() throws SQLException {
+	public EmployeeManagementGUI(Manager manager) throws SQLException {
 		employeeModel = new DefaultTableModel();
 		Object[] colEmployeeName = new Object[3];
 		colEmployeeName[0] = "Çalışan ID";
@@ -391,7 +393,7 @@ public class EmployeeManagementGUI extends JFrame {
 		JButton btn_exit = new JButton("Menüye Geri Dön");
 		btn_exit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				MenuGUI menuGUI = new MenuGUI();
+				MenuGUI menuGUI = new MenuGUI(manager);
 				menuGUI.setVisible(true);
 				dispose();
 			}

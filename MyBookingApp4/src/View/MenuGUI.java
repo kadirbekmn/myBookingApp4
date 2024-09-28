@@ -34,9 +34,13 @@ public class MenuGUI extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					MenuGUI frame = new MenuGUI();
+					MenuGUI frame = new MenuGUI(manager);
 					frame.pack();
 					Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+
+					
+					
+					
 					int height = screenSize.height;
 					int width = screenSize.width;
 					frame.setSize(width, height);
@@ -50,7 +54,7 @@ public class MenuGUI extends JFrame {
 		});
 	}
 
-	public MenuGUI() {
+	public MenuGUI(Manager manager) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 850, 700);
 		w_pane = new JPanel();
@@ -100,7 +104,7 @@ public class MenuGUI extends JFrame {
 		menu_employee.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					EmployeeManagementGUI employeeManagement = new EmployeeManagementGUI();
+					EmployeeManagementGUI employeeManagement = new EmployeeManagementGUI(manager);
 					employeeManagement.setVisible(true);
 					dispose();
 				} catch (SQLException e1) {
@@ -119,7 +123,7 @@ public class MenuGUI extends JFrame {
 		menu_employee.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					OperationManagementGUI operationManagement = new OperationManagementGUI();
+					OperationManagementGUI operationManagement = new OperationManagementGUI(manager);
 					operationManagement.setVisible(true);
 					dispose();
 				} catch (SQLException e1) {
@@ -133,7 +137,7 @@ public class MenuGUI extends JFrame {
 		menu_operation.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					OperationManagementGUI operationManagement = new OperationManagementGUI();
+					OperationManagementGUI operationManagement = new OperationManagementGUI(manager);
 					operationManagement.setVisible(true);
 					dispose();
 				} catch (SQLException e1) {
@@ -153,7 +157,7 @@ public class MenuGUI extends JFrame {
 		menu_customer.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					CustomerManagementGUI customerManagement = new CustomerManagementGUI();
+					CustomerManagementGUI customerManagement = new CustomerManagementGUI(manager);
 					customerManagement.setVisible(true);
 					dispose();
 				} catch (SQLException e1) {
@@ -168,6 +172,30 @@ public class MenuGUI extends JFrame {
 		menu_customer.setBackground(Color.WHITE);
 		menu_customer.setBounds(30, 358, 328, 77);
 		panel_menuItems.add(menu_customer);
+		
+		JButton menu_reports = new JButton("Raporlar");
+		menu_reports.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					Reports reports = new Reports(manager);
+					reports.setVisible(true);
+					dispose();
+				} catch (Exception e2) {
+					e2.printStackTrace();
+				}
+				
+			}
+			
+		});
+		menu_reports.setHorizontalAlignment(SwingConstants.CENTER);
+		menu_reports.setFont(new Font("Yu Gothic Medium", Font.BOLD, 25));
+		menu_reports.setBorderPainted(true);
+		menu_reports.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+		menu_reports.setBackground(Color.WHITE);
+		menu_reports.setBounds(30, 446, 328, 77);
+		panel_menuItems.add(menu_reports);
 
 		JPanel panel_menuInfos = new JPanel();
 		panel_menuInfos.setLayout(null);
@@ -189,7 +217,7 @@ public class MenuGUI extends JFrame {
 		lbl_loggedInUser_1_1_1.setBounds(10, 282, 370, 143);
 		panel_menuInfos.add(lbl_loggedInUser_1_1_1);
 
-		JLabel lbl_loggedInUser = new JLabel("Hosgeldiniz, Sayın <dynamic>");
+		JLabel lbl_loggedInUser = new JLabel("Hosgeldiniz, Sayın " + manager.getNickname());
 		lbl_loggedInUser.setHorizontalAlignment(SwingConstants.LEFT);
 		lbl_loggedInUser.setFont(new Font("Yu Gothic Medium", Font.BOLD, 20));
 		lbl_loggedInUser.setBounds(10, 15, 390, 36);

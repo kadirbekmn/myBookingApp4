@@ -13,6 +13,7 @@ import javax.swing.table.DefaultTableModel;
 
 import Helper.DBConnection;
 import Helper.Helper;
+import Model.Manager;
 import Model.Operation;
 
 import javax.swing.JTabbedPane;
@@ -42,13 +43,14 @@ public class OperationManagementGUI extends JFrame {
 	private DefaultTableModel operationModel = null;
 	private JTextField fld_operationId;
 	private JTextField fld_operationToSearch;
+	private static Manager manager = new Manager();
 	private JTextField fld_operationPrice;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					OperationManagementGUI frame = new OperationManagementGUI();
+					OperationManagementGUI frame = new OperationManagementGUI(manager);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -57,7 +59,7 @@ public class OperationManagementGUI extends JFrame {
 		});
 	}
 
-	public OperationManagementGUI() throws SQLException {
+	public OperationManagementGUI(Manager manager) throws SQLException {
 		operationModel = new DefaultTableModel();
 		Object[] colOperationName = new Object[4];
 		colOperationName[0] = "Operasyon ID";
@@ -274,7 +276,7 @@ public class OperationManagementGUI extends JFrame {
 		JButton btn_exit = new JButton("Menüye Geri Dön");
 		btn_exit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				MenuGUI menuGUI = new MenuGUI();
+				MenuGUI menuGUI = new MenuGUI(manager);
 				menuGUI.setVisible(true);
 				dispose();
 			}

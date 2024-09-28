@@ -37,7 +37,7 @@ public class Manager{
 		return nickname;
 	}
 	public void setNickname(String name) {
-		this.nickname = nickname;
+		this.nickname = name;
 	}
 	public String getPassword() {
 		return password;

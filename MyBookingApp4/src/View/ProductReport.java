@@ -55,6 +55,7 @@ public class ProductReport extends JFrame {
 	
 	
 	private void initialize() {
+		 setTitle("Satılan Ürün Rapor");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1366, 776);
 		contentPane = new JPanel();
@@ -102,6 +103,8 @@ public class ProductReport extends JFrame {
 		contentPane.add(center_panel);
 		center_panel.setLayout(null);
 		
+
+		
 		table_saled_product = new JTable(createTable());
 		table_saled_product.setBounds(1, 1, 450, 0);
 		center_panel.add(table_saled_product);
@@ -122,10 +125,17 @@ public class ProductReport extends JFrame {
 		
 		
 		try {
+			int siz = saledProduct.getSaledProductsList().size();
+			System.out.println(siz);
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		try {
 			for (int i = 0; i < saledProduct.getSaledProductsList().size(); i++) {
 				saledProductDataObjects[0] = saledProduct.getSaledProductsList().get(i).getId(); 
 				saledProductDataObjects[1] = saledProduct.getSaledProductsList().get(i).getSelectedProductNumber();
-				saledProductDataObjects[2] = saledProduct.getSaledProductsList().get(i).getName();
+				saledProductDataObjects[2] = product.getNameById(Integer.parseInt(saledProduct.getSaledProductsList().get(i).getName()));
 				saledProductDataObjects[3] = saledProduct.getSaledProductsList().get(i).getPurchasePrice();
 				saledProductDataObjects[4] = saledProduct.getSaledProductsList().get(i).getSalePrice();
 				saledProductDataObjects[5] = employee.getNameByID(saledProduct.getSaledProductsList().get(i).getSellingEmployeeID());
@@ -141,6 +151,7 @@ public class ProductReport extends JFrame {
 			}
 			} catch (SQLException e) {
 				e.printStackTrace();
+				System.out.println(5);
 			}
 		
 		return productDefaultTableModel;

@@ -16,11 +16,11 @@ import View.ProductManagementGUI;
 
 public class Product {
 
-	DBConnection dbConnection = null;
-	Connection connection = null;
-	ResultSet resultSet = null;
-	Statement statement = null;
-	PreparedStatement preparedStatement = null;
+	DBConnection dbConnection;
+	Connection connection;
+	ResultSet resultSet;
+	Statement statement;
+	PreparedStatement preparedStatement;
 
 	protected int id;
 	protected String name;
@@ -134,7 +134,7 @@ public class Product {
 		Product objectProduct = null;
 		try {
 			statement = connection.createStatement();
-			resultSet = statement.executeQuery("SELECT * FROM product");
+			resultSet = statement.executeQuery("SELECT * FROM product WHERE deleted = 0");
 			while (resultSet.next()) {
 				objectProduct = new Product(resultSet.getInt("id"), resultSet.getString("name"),
 						resultSet.getInt("purchase_price"), resultSet.getInt("sale_price"), resultSet.getInt("stock"));
@@ -290,6 +290,25 @@ public class Product {
 			return id;
 		}
 	}
+	
+	public String getNameById (int id) {
+		String query = "Select * FROM product WHERE id = ?";
+		String name = " ";
+		try {
+			statement = connection.createStatement();
+			preparedStatement = connection.prepareStatement(query);
+			preparedStatement.setInt(1, id);
+			resultSet = preparedStatement.executeQuery();
+			while (resultSet.next()) {
+				
+				name = resultSet.getString("name");
+			}
+			return name;
+		} catch (Exception e) {
+			// TODO: handle exception
+			return name;
+		}
+	}
 
 	
 	public boolean updateProduct(int id, String name, int purchasePrice, int salePrice, int stock) {
@@ -312,18 +331,32 @@ public class Product {
 	}
 	
 	public boolean deleteProduct(int id) {
-		String query = "DELETE FROM product WHERE id = ?";
+		
+		String query = "UPDATE product SET deleted = 1 WHERE id = ?";
 		try {
 			preparedStatement = connection.prepareStatement(query);
 			preparedStatement.setInt(1, id);
 			preparedStatement.executeUpdate();
 			return true;
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
 		} finally {
 			closeResources();
 		}
+		
+//		String query = "DELETE FROM product WHERE id = ?";
+//		try {
+//			preparedStatement = connection.prepareStatement(query);
+//			preparedStatement.setInt(1, id);
+//			preparedStatement.executeUpdate();
+//			return true;
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//			return false;
+//		} finally {
+//			closeResources();
+//		}
 	}
 	
 	protected void closeResources() {
@@ -344,7 +377,7 @@ public class Product {
 	
 
 	public void updateStockById(int id, int newStock) throws SQLException {
-        String query = "UPDATE products SET stock = ? WHERE id = ?";
+        String query = "UPDATE product SET stock = ? WHERE id = ?";
        preparedStatement  = connection.prepareStatement(query);
     		   
             preparedStatement.setInt(1, newStock);

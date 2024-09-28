@@ -7,16 +7,21 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
+
+import javax.swing.table.DefaultTableModel;
+
+import com.toedter.calendar.JDateChooser;
 
 import Helper.DBConnection;
 
-public class SaledProduct extends Product {
-	DBConnection dbConnection = new DBConnection();
-	Connection connection = dbConnection.connectDB();
-	ResultSet resultSet = null;
-	Statement statement = null;
-	PreparedStatement preparedStatement = null;
-	private static SaledProduct saledProduct = new SaledProduct();
+public class SaledProduct  extends Product{
+	DBConnection dbConnection;
+	Connection connection;
+	ResultSet resultSet;
+	Statement statement;
+	PreparedStatement preparedStatement;
+	//private static SaledProduct saledProduct = new SaledProduct();
 	
 	private int selectedProductNumber;
 	private double premiumPercentage;
@@ -24,6 +29,8 @@ public class SaledProduct extends Product {
 	private double profit;
 	private int sellingEmployeeID;
 	private Timestamp transactionDate;
+	static Product product = new Product();
+
 
 
 
@@ -80,16 +87,20 @@ public class SaledProduct extends Product {
 	public SaledProduct() {
 		dbConnection = new DBConnection();
 		connection = dbConnection.connectDB();
-		closeResources();
+		
 	}
 	
-	public SaledProduct(int id,int selectedProductNumber,String name, int purchasePrice, int salePrice, int stock,double premiumPercentage,double premiumFee,double profit,int sellingEmployeeID,Timestamp transactionDate) {
-		this.id = id;
+
+
+	
+	public SaledProduct(int id,int selectedProductNumber,int productID, int purchasePrice, int salePrice, int stock,double premiumPercentage,double premiumFee,double profit,int sellingEmployeeID,Timestamp transactionDate) {
+		super(id, product.getNameById(productID), purchasePrice, salePrice, stock);
+		//this.id = id;
 		this.selectedProductNumber=selectedProductNumber;
-		this.name=name;
-		this.purchasePrice = purchasePrice;
-		this.salePrice= salePrice;
-		this.stock = stock;
+		//this.name=name;
+		//this.setPurchasePrice(purchasePrice);
+		//this.setSalePrice(salePrice);
+		//this.stock = stock;
 		this.premiumPercentage = premiumPercentage;
 		this.premiumFee = premiumFee;
 		this.profit = profit;
@@ -97,7 +108,7 @@ public class SaledProduct extends Product {
 		this.transactionDate = transactionDate;
 		
 	}
-
+	
 
 	
 	public ArrayList<SaledProduct> getSaledProductsList() throws SQLException {
@@ -108,11 +119,11 @@ public class SaledProduct extends Product {
 			statement = connection.createStatement();
 			resultSet = statement.executeQuery("SELECT * FROM saledproduct");
 			while (resultSet.next()) {
-				objectSaledProduct = new SaledProduct(resultSet.getInt("id"), resultSet.getInt("selected_product_number"),resultSet.getString("product"),
+				objectSaledProduct = new SaledProduct(resultSet.getInt("id"), resultSet.getInt("selected_product_number"),resultSet.getInt("product"),
 						resultSet.getInt("purchase_price"), resultSet.getInt("sale_price"), resultSet.getInt("stock"),resultSet.getDouble("premium_percentage"),
 						resultSet.getDouble("premium_fee"),resultSet.getDouble("profit"),resultSet.getInt("selling_employee"),resultSet.getTimestamp("transaction_date"));
 				saledProductList.add(objectSaledProduct);
-				closeResources();
+				
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -122,11 +133,84 @@ public class SaledProduct extends Product {
 
 		return saledProductList;
 	}
-
-
-
 	
 	
+
+	
+	public DefaultTableModel getFilteredSales(String employeeName, JDateChooser startDate, JDateChooser endDate, String productName) {
+		try {
+			 int paramIndex = 1;
+			 
+			  String query = "SELECT sp.id, sp.selected_product_number, p.name as product_name, sp.purchase_price, sp.sale_price, e.name as employee_name, " +
+	                   "sp.premium_percentage, sp.premium_fee, sp.profit, sp.transaction_date " +
+	                   "FROM saledproduct sp " +
+	                   "JOIN employee e ON sp.selling_employee = e.id " +
+	                   "JOIN product p ON sp.product = p.id " +
+	                   "WHERE 1=1 ";
+			  if (employeeName != null && !employeeName.isEmpty()) {
+			        query += "AND e.name LIKE ? ";
+			    }
+			    if (startDate.getDate() != null) {
+			        query += "AND sp.transaction_date >= ? ";
+			    }
+			    if (endDate.getDate() != null) {
+			        query += "AND sp.transaction_date <= ? ";
+			    }
+			    if (productName != null && !productName.isEmpty()) {
+			        query += "AND p.name LIKE ? ";
+			    }
+			
+			preparedStatement = connection.prepareStatement(query);
+
+			
+			
+		        
+		        if (employeeName != null && !employeeName.isEmpty()) {
+		            preparedStatement.setString(paramIndex++, "%" + employeeName + "%");
+		        }
+		        if (startDate.getDate() != null) {
+		           preparedStatement.setTimestamp(paramIndex++, new java.sql.Timestamp(startDate.getDate().getTime()));
+		        }
+		        if (endDate.getDate() != null) {
+		           preparedStatement.setTimestamp(paramIndex++, new java.sql.Timestamp(endDate.getDate().getTime()));
+		        }
+		        if (productName != null && !productName.isEmpty()) {
+		            preparedStatement.setString(paramIndex++,"%" + productName + "%");
+		        }
+		        
+		        
+		        resultSet = preparedStatement.executeQuery();
+	            DefaultTableModel model = new DefaultTableModel(
+	                new String[]{"ID", "Satılan Ürün Adedi", "Ürün Adı", "Alış Fiyatı", "Satış Fiyatı", "Satan Çalışan", "Alınan Prim Yüzdesi", "Alınan Prim", "Elde Edilen Kar", "Satış Tarihi"}, 0);
+
+	            while (resultSet.next()) {
+	                model.addRow(new Object[]{
+	                    resultSet.getInt("id"),
+	                    resultSet.getInt("selected_product_number"),
+	                    resultSet.getString("product_name"),
+	                    resultSet.getInt("purchase_price"),
+	                    resultSet.getInt("sale_price"),
+	                    resultSet.getString("employee_name"),
+	                    resultSet.getDouble("premium_percentage"),
+	                    resultSet.getDouble("premium_fee"),
+	                    resultSet.getDouble("profit"),
+	                    resultSet.getTimestamp("transaction_date")
+	                });
+	            }
+			
+	            return model;
+		
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.getMessage();
+			return null;
+		}
+		
+		
+		
+		
+	}
+
 	 
 }
 

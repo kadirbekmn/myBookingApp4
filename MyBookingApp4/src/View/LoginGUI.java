@@ -40,6 +40,7 @@ public class LoginGUI extends JFrame {
 	private JPanel w_pane;
 	private JTextField fld_userNickname;
 	private JTextField fld_userPassword;
+	private Manager manager;
 	private DBConnection conn = new DBConnection();
 	
 	public static void main(String[] args) {
@@ -108,11 +109,11 @@ public class LoginGUI extends JFrame {
 	                        ResultSet rs = st.executeQuery("SELECT * FROM manager");
 	                        while (rs.next()) {
 	                        	if (fld_userNickname.getText().equals(rs.getString("nickname")) && fld_userPassword.getText().equals(rs.getString("password"))) {
-	                                Manager manager = new Manager();
+	                                manager = new Manager();
 	                                manager.setId(rs.getInt("id"));
 	                                manager.setNickname(rs.getString("nickname"));
 	                                manager.setPassword(rs.getString("password"));
-	                                MenuGUI menuGUI = new MenuGUI();
+	                                MenuGUI menuGUI = new MenuGUI(manager);
 	                                menuGUI.setVisible(true);
 	                                dispose();
 	                        } else {
