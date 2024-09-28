@@ -13,6 +13,11 @@
 	</classpathentry>
 	<classpathentry kind="lib" path="C:/projectFiles/mysql-connector-j-8.2.0.jar"/>
 	<classpathentry kind="lib" path="C:/projectFiles/mariadb-java-client-3.3.3 (2).jar"/>
+<<<<<<< HEAD
 	<classpathentry kind="lib" path="C:/projectFiles/jcalendar-1.4.jar"/>
+=======
+	<classpathentry kind="lib" path="jcalendar-1.4.jar"/>
+	<classpathentry kind="lib" path="jgoodies-common-1.2.0.jar"/>
+>>>>>>> branch 'master' of https://github.com/kadirbekmn/myBookingApp4.git
 	<classpathentry kind="output" path="bin"/>
 </classpath>

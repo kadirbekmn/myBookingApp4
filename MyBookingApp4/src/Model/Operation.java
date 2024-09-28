@@ -132,20 +132,43 @@ public class Operation {
 			closeResources();
 		}
 	}
-	
-    public List<String> getOperationTypes() throws SQLException {
-        List<String> operationTypes = new ArrayList<>();
-        try {
-            st = con.createStatement();
-            rs = st.executeQuery("SELECT DISTINCT operationName FROM operation");
-            while (rs.next()) {
-                operationTypes.add(rs.getString("operationName"));
-            }
-        } finally {
-            closeResources();
-        }
-        return operationTypes;
-    }
+
+	public List<String> getOperationTypes() throws SQLException {
+		List<String> operationTypes = new ArrayList<>();
+		try {
+			st = con.createStatement();
+			rs = st.executeQuery("SELECT DISTINCT operationName FROM operation");
+			while (rs.next()) {
+				operationTypes.add(rs.getString("operationName"));
+			}
+		} finally {
+			closeResources();
+		}
+		return operationTypes;
+	}
+
+	public List<Operation> findOperationTypesByEmployee(Employee employee) throws SQLException {
+		List<Operation> operationTypes = new ArrayList<>();
+		String query = "SELECT o.id, o.operationName, o.operationTime, o.operationPrice " + "FROM operation o "
+				+ "INNER JOIN operations_by_employee r ON r.operation_fk = o.id " + "WHERE r.employee_fk = ?";
+		try {
+			preparedStatement = con.prepareStatement(query);
+			preparedStatement.setInt(1, employee.getId());
+			rs = preparedStatement.executeQuery();
+			while (rs.next()) {
+				Operation operation = new Operation(rs.getInt("id"), rs.getString("operationName"),
+						rs.getInt("operationTime"), rs.getInt("operationPrice"));
+				operationTypes.add(operation);
+			}
+		} finally {
+			closeResources();
+		}
+		return operationTypes;
+	}
+
+	public String toString() {
+		return this.operationName;
+	}
 
 	private void closeResources() {
 		try {

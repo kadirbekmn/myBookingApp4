@@ -8,11 +8,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 
 import Helper.DBConnection;
-import View.ProductManagementGUI;
 
 public class Product {
 
@@ -360,20 +358,29 @@ public class Product {
 	}
 	
 	protected void closeResources() {
-		try {
-			if (resultSet != null) {
-				resultSet.close();
-			}
-			if (statement != null) {
-				statement.close();
-			}
-			if (preparedStatement != null) {
-				preparedStatement.close();
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+	    try {
+	        if (resultSet != null) {
+	            resultSet.close();
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    try {
+	        if (statement != null) {
+	            statement.close();
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    try {
+	        if (preparedStatement != null) {
+	            preparedStatement.close();
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
 	}
+
 	
 
 	public void updateStockById(int id, int newStock) throws SQLException {
@@ -410,4 +417,68 @@ public class Product {
         }
         return products;
     }
+	
+	public int getTodaySoldProductCount() throws SQLException {
+	    String query = "SELECT SUM(selected_product_number) FROM saledproduct WHERE DATE(transaction_date) = CURDATE()";
+
+	    try (PreparedStatement preparedStatement = connection.prepareStatement(query);
+	         ResultSet resultSet = preparedStatement.executeQuery()) {
+	        if (resultSet.next()) {
+	            return resultSet.getInt(1);
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+		} finally {
+			closeResources();
+		}
+	    return 0;
+	}
+
+	public double getTodayTotalProfit() throws SQLException {
+	    String query = "SELECT SUM((sale_price - purchase_price) * selected_product_number) FROM saledproduct WHERE DATE(transaction_date) = CURDATE()";
+
+	    try (PreparedStatement preparedStatement = connection.prepareStatement(query);
+	         ResultSet resultSet = preparedStatement.executeQuery()) {
+	        if (resultSet.next()) {
+	            return resultSet.getDouble(1);
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+		} finally {
+			closeResources();
+		}
+	    return 0.0;
+	}
+	
+	public int getThisMonthSoldProductCount() throws SQLException {
+	    String query = "SELECT SUM(selected_product_number) FROM saledproduct WHERE YEAR(transaction_date) = YEAR(CURDATE()) AND MONTH(transaction_date) = MONTH(CURDATE())";
+
+	    try (PreparedStatement preparedStatement = connection.prepareStatement(query);
+	         ResultSet resultSet = preparedStatement.executeQuery()) {
+	        if (resultSet.next()) {
+	            return resultSet.getInt(1);
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+		} finally {
+			closeResources();
+		}
+	    return 0;
+	}
+
+	public double getThisMonthTotalProfit() throws SQLException {
+	    String query = "SELECT SUM((sale_price - purchase_price) * selected_product_number) FROM saledproduct WHERE YEAR(transaction_date) = YEAR(CURDATE()) AND MONTH(transaction_date) = MONTH(CURDATE())";
+
+	    try (PreparedStatement preparedStatement = connection.prepareStatement(query);
+	         ResultSet resultSet = preparedStatement.executeQuery()) {
+	        if (resultSet.next()) {
+	            return resultSet.getDouble(1);
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+		} finally {
+			closeResources();
+		}
+	    return 0.0;
+	}
 }

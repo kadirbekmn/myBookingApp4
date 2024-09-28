@@ -11,7 +11,6 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 
-import Helper.DBConnection;
 import Helper.Helper;
 import Model.Manager;
 import Model.Operation;
@@ -26,10 +25,8 @@ import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.table.TableModel;
 import javax.swing.border.EtchedBorder;
 import javax.swing.SwingConstants;
-import javax.swing.JCheckBoxMenuItem;
 
 public class OperationManagementGUI extends JFrame {
 
@@ -315,7 +312,7 @@ public class OperationManagementGUI extends JFrame {
 	}
 
 	public void updateOperationModel() throws SQLException {
-	    operation.getOperationList(fld_operationToSearch.getText());
+		operation.getOperationList(fld_operationToSearch.getText());
 		DefaultTableModel clearModel = (DefaultTableModel) table_operation.getModel();
 		clearModel.setRowCount(0);
 		for (int i = 0; i < operation.list.size(); i++) {
